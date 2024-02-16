@@ -8,10 +8,13 @@ import (
 
 func main() {
 	var err error
+
 	model.Init()
+
 	err = database.Init()
 	if err != nil {
 		panic(err)
 	}
+
 	routes.Init()
 }
