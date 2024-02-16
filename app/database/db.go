@@ -24,6 +24,7 @@ func getConnectionInfo() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	connInfo := conn_info{
 		Host:     os.Getenv("POSTGRES_URL"),
 		Port:     os.Getenv("POSTGRES_PORT"),
@@ -31,6 +32,7 @@ func getConnectionInfo() (string, error) {
 		Password: os.Getenv("POSTGRES_PASSWORD"),
 		DbName:   os.Getenv("POSTGRES_DB"),
 	}
+
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		connInfo.Host, connInfo.Port, connInfo.User, connInfo.Password, connInfo.DbName), nil
 }
@@ -40,7 +42,7 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(dsn)
+
 	db, err = sql.Open("postgres", dsn)
 	if err != nil {
 		return err
@@ -49,5 +51,6 @@ func Init() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
