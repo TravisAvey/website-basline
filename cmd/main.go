@@ -1,16 +1,17 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/travisavey/baseline/app/database"
 	"github.com/travisavey/baseline/app/model"
 	"github.com/travisavey/baseline/app/routes"
 )
 
 func main() {
-	fmt.Println("Hello!")
+	var err error
 	model.Init()
-	database.Init()
+	err = database.Init()
+	if err != nil {
+		panic(err)
+	}
 	routes.Init()
 }
