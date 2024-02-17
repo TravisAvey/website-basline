@@ -19,3 +19,7 @@
 
 # Go workspace file
 go.work
+
+# npm stuff
+**/node_modules
+**/dist

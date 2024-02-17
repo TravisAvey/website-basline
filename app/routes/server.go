@@ -14,9 +14,11 @@ var router *mux.Router
 func Init() {
 	router = mux.NewRouter()
 
+	fs := http.FileServer(http.Dir("web/dist/"))
+	router.PathPrefix("/dist/").Handler(http.StripPrefix("/dist/", fs))
+
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.Proto)
-
 		data := struct {
 			Text string
 		}{
