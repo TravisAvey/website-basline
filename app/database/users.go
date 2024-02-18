@@ -1,12 +1,5 @@
 package database
 
-type User struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"-"`
-	ID       uint64 `json:"id"`
-}
-
 func CreateUser(user *User) error {
 	statement := `insert into users(name, email, password) values($1, $2, $3);`
 	// db.Create(&user)
