@@ -1,12 +1,23 @@
 package routes
 
 import (
+	"html/template"
 	"net/http"
-
-	"github.com/travisavey/baseline/app/views"
 )
 
-func about(w http.ResponseWriter, r *http.Request) {
-	page := views.Page("About Page")
-	page.Render(r.Context(), w)
+func about(w http.ResponseWriter, _ *http.Request) {
+	data := struct {
+		Text string
+	}{
+		Text: "About Page",
+	}
+
+	files := getBaseTemplates()
+	files = append(files, "web/templates/pages/about.html")
+
+	t, _ := template.ParseFiles(files...)
+	err := t.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		w.Write([]byte("Error processing templates.."))
+	}
 }
