@@ -18,3 +18,9 @@ func contact(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte("Error processing templates.."))
 	}
 }
+
+// endpoint for a post request for a contact here
+//
+// TODO: think how this will work: fire off an email
+// what email service to setup and use in the backend here?
+// sendgrid, twilio, mailchimp, etc

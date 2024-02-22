@@ -18,3 +18,13 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte("Error processing templates.."))
 	}
 }
+
+// create a post
+
+// get a single post
+
+// get all posts
+
+// update a post
+
+// delete a post

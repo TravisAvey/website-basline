@@ -18,3 +18,13 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte("Error processing templates.."))
 	}
 }
+
+// upload/create a image
+
+// get a single image
+
+// get all images
+
+// update a image
+
+// delete a image

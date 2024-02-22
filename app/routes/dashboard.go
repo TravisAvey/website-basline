@@ -21,3 +21,8 @@ func dashboard(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte("Error processing templates.."))
 	}
 }
+
+// not sure what need endpoints here are needed..
+// most CRUD ops already in other routes' go files
+//
+// Will need to decide how much work here for the baseline
