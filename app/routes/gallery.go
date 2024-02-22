@@ -12,11 +12,8 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 		Text: "Gallery Page",
 	}
 
-	files := getBaseTemplates()
-	files = append(files, "web/templates/index.html")
-
-	t, _ := template.ParseFiles(files...)
-	err := t.ExecuteTemplate(w, "base", data)
+	t, _ := template.ParseFiles("web/templates/pages/gallery.html")
+	err := t.Execute(w, data)
 	if err != nil {
 		w.Write([]byte("Error processing templates.."))
 	}
