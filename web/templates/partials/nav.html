@@ -2,10 +2,11 @@
 
 <nav>
   <a class="link link-primary" href="/">home</a>
-  <a class="link link-success" href="/about">about</a>
-  <a class="link link-primary" href="/contact">contact</a>
-  <a class="link link-accent" href="/gallery">gallery</a>
-  <a class="link link-warning" href="/dashboard">dashboard</a>
+  <p hx-get="/about" hx-target="#content" class="link link-success">about</p>
+  <p hx-get="/contact" hx-target="#content" class="link link-primary">contact</p>
+  <p hx-get="/gallery" hx-target="#content" class="link link-accent">gallery</p>
+  <p hx-get="/blog" hx-target="#content" class="link link-warning">blog</p>
+  <p hx-get="/dashboard" hx-target="#content" class="link link-secondary">dashboard</p>
 </nav>
 
 {{ end }}
