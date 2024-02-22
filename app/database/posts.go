@@ -178,5 +178,6 @@ func DeletePost(id int64) error {
 	}
 	statement := `delete from posts where id = $1;`
 	_, err := db.Exec(statement, id)
+
 	return err
 }
