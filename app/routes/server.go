@@ -26,6 +26,10 @@ func Init() {
 	router.HandleFunc("/blog/posts/{id}", deletePost).Methods("DELETE")
 	router.HandleFunc("/blog/posts", getPosts).Methods("GET")
 	router.HandleFunc("/gallery", gallery)
+	router.HandleFunc("/gallery/new", newImage).Methods("POST")
+	router.HandleFunc("/gallery/{id}", getImage).Methods("GET")
+	router.HandleFunc("/gallery/{id}", getImage).Methods("PUT")
+	router.HandleFunc("/gallery/{id}", getImage).Methods("DELETE")
 	router.HandleFunc("/contact", contact)
 	router.HandleFunc("/dashboard", dashboard)
 

@@ -55,7 +55,7 @@ func getImage(w http.ResponseWriter, r *http.Request) {
 }
 
 // get all images
-func getImages(w http.ResponseWriter, r *http.Request) {
+func getImages(w http.ResponseWriter, _ *http.Request) {
 	images, err := database.GetAllImages()
 	if err != nil {
 		w.Write([]byte(err.Error()))
@@ -66,5 +66,29 @@ func getImages(w http.ResponseWriter, r *http.Request) {
 }
 
 // update a image
+func updateImage(w http.ResponseWriter, r *http.Request) {
+	image, err := parseImageData(r)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	err = database.UpdateImage(image)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
+}
 
 // delete a image
+func deleteImage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	err = database.DeleteImage(id)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
+}

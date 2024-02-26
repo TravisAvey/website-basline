@@ -59,6 +59,7 @@ func parseImageData(r *http.Request) (database.Image, error) {
 	if err != nil {
 		return database.Image{}, err
 	}
+
 	catID, err := strconv.ParseUint(r.FormValue("categoryId"), 10, 64)
 	if err != nil {
 		return database.Image{}, err
