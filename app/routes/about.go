@@ -20,3 +20,6 @@ func about(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte(errStr))
 	}
 }
+
+// not much to do here.. maybe just update the template with all that
+// is needed on the about page...
