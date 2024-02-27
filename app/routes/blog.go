@@ -55,7 +55,6 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: pass to template
 	t, _ := template.ParseFiles("web/templates/pages/blog/post.html")
 	err = t.Execute(w, post)
 	if err != nil {

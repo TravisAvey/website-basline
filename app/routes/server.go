@@ -25,7 +25,7 @@ func Init() {
 	router.HandleFunc("/blog/posts/{id}", updatePost).Methods("PUT")
 	router.HandleFunc("/blog/posts/{id}", deletePost).Methods("DELETE")
 	router.HandleFunc("/blog/posts", getPosts).Methods("GET")
-	router.HandleFunc("/gallery", gallery)
+	router.HandleFunc("/gallery", getImages).Methods("GET")
 	router.HandleFunc("/gallery/new", newImage).Methods("POST")
 	router.HandleFunc("/gallery/{id}", getImage).Methods("GET")
 	router.HandleFunc("/gallery/{id}", getImage).Methods("PUT")
