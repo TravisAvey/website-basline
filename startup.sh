@@ -4,8 +4,7 @@
 # and run the server
 
 pushd web/static
-npx tailwindcss -i src/css/input.css -o ../dist/css/style.css
-
+npx tailwindcss -i src/css/input.css -o ../dist/css/style.css --minify
 popd
 
 go run cmd/main.go

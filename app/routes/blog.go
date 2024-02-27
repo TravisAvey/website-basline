@@ -11,16 +11,16 @@ import (
 )
 
 func blog(w http.ResponseWriter, _ *http.Request) {
-	data := struct {
-		Text string
-	}{
-		Text: "Blog Page",
+	posts, err := database.GetAllPosts()
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
 	}
 
 	t, _ := template.ParseFiles("web/templates/pages/blog.html")
-	err := t.Execute(w, data)
+	err = t.Execute(w, posts)
 	if err != nil {
-		w.Write([]byte("Error processing templates.."))
+		w.Write([]byte(err.Error()))
 	}
 }
 
@@ -56,8 +56,11 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: pass to template
-	postStr := fmt.Sprint(post)
-	w.Write([]byte(postStr))
+	t, _ := template.ParseFiles("web/templates/pages/blog/post.html")
+	err = t.Execute(w, post)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }
 
 // get all posts
