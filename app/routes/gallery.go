@@ -61,8 +61,12 @@ func getImages(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	img := fmt.Sprint(images)
-	w.Write([]byte(img))
+
+	t, _ := template.ParseFiles("web/templates/pages/gallery.html")
+	err = t.Execute(w, images)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }
 
 // update a image

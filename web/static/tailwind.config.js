@@ -3,7 +3,11 @@ module.exports = {
   content: ["../templates/**/*.html"],
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["dracula", "dark"],
+    themes: ["dracula", "dark", "light"],
+    base: true, 
+    logs: true,
+    themeRoot: ":root",
+    styled: true,
   },
 }
 
