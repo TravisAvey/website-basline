@@ -14,8 +14,8 @@
 </head>
 
 <body>
-  {{ template "header" .}}
   {{ template "nav" . }}
+  {{ template "header" .}}
   <main id="content">
     {{ block "content" . }} {{ end }}
   </main>
