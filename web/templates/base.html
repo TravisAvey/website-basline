@@ -16,9 +16,9 @@
 <body>
   {{ template "nav" . }}
   {{ template "header" .}}
-  <main id="content">
+  <div id="content">
     {{ block "content" . }} {{ end }}
-  </main>
+  </div>
   {{ template "footer" . }}
 </body>
 
