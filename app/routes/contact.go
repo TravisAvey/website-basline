@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -28,7 +27,11 @@ func contactForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(r.FormValue("name"), r.FormValue("email"), r.FormValue("message"))
+	t, _ := template.ParseFiles("web/templates/responses/contact.html")
+	err = t.Execute(w, nil)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }
 
 //
