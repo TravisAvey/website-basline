@@ -1,2 +1,18 @@
-<h1 class="text-2xl text-orange-500">{{ .Text }}</h1>
-<p>A contact form with htmx</p>
+<section class="container grid grid-cols-1 mx-auto p-16 gap-8 max-w-2xl">
+  <h1 class="text-2xl text-orange-500">{{ .Text }}</h1>
+  <form hx-post="/contact/submit">
+    <label class="input input-bordered flex items-center gap-2 my-4">
+      Name
+      <input id="name" name="name" type="text" class="grow" required />
+    </label>
+    <label class="input input-bordered flex items-center gap-2 my-4">
+      Email
+      <input type="email" id="email" name="email" class="grow" required />
+    </label>
+
+    <textarea placeholder="Message" id="message" name="message"
+      class="textarea textarea-bordered textarea-md w-full my-4" required></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary my-4">Send</button>
+  </form>
+</section>

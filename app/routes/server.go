@@ -31,6 +31,7 @@ func Init() {
 	router.HandleFunc("/gallery/{id}", getImage).Methods("PUT")
 	router.HandleFunc("/gallery/{id}", getImage).Methods("DELETE")
 	router.HandleFunc("/contact", contact)
+	router.HandleFunc("/contact/submit", contactForm).Methods("POST")
 	router.HandleFunc("/dashboard", dashboard)
 
 	router.Use(mux.CORSMethodMiddleware(router))
