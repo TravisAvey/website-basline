@@ -1,3 +1,10 @@
+{{ define "metaTags" }}
+<meta name="hello" content="hello">
+{{ end }}
+
+{{ define "title" }} {{ .Article.Title }} {{ end }}
+
+{{ define "content" }}
 <img src="{{ .Article.ImageURL }}" />
 
 <small>{{ .Article.Summary }}</small>
@@ -6,3 +13,5 @@
 <p>Keywords: {{ .Article.Keywords }}</p>
 <p>Slug: {{ .Article.Slug }}</p>
 <p>{{ .Article.Content }}</p>
+
+{{ end }}

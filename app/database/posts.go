@@ -97,6 +97,34 @@ func GetPost(id int64) (Post, error) {
 	return post, nil
 }
 
+func GetPostBySlug(slug string) (Post, error) {
+	statement := `select id, title, summary, imageurl, keywords, dateupdated, dateposted, content from posts where slug = $1`
+	var article Article
+	article.Slug = slug
+	row, err := db.Query(statement, slug)
+	if err != nil {
+		return Post{}, err
+	}
+	defer row.Close()
+
+	for row.Next() {
+		err := row.Scan(&article.ID, &article.Title, &article.Summary, &article.ImageURL, &article.Keywords, &article.DatePosted, &article.DateUpdated, &article.Content)
+		if err != nil {
+			return Post{}, err
+		}
+	}
+	categories, err := GetPostCategories(article.ID)
+	if err != nil {
+		return Post{}, err
+	}
+
+	post := Post{
+		Article:    article,
+		Categories: categories,
+	}
+	return post, nil
+}
+
 func GetLastPostInserted() (int, error) {
 	var id int
 	statement := `select id from posts order by dateposted desc limit 1;`

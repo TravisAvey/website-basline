@@ -43,7 +43,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
 		// TODO: log Error
-		w.Write([]byte("error parsing id"))
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -51,12 +51,30 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	post, err = database.GetPost(id)
 	if err != nil {
 		// TODO: log error
-		w.Write([]byte("Error getting post."))
+		w.Write([]byte(err.Error()))
 		return
 	}
 
 	t, _ := template.ParseFiles("web/templates/pages/blog/post.html")
 	err = t.Execute(w, post)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
+}
+
+func getPostBySlug(w http.ResponseWriter, r *http.Request) {
+	slug := mux.Vars(r)["slug"]
+
+	post, err := database.GetPostBySlug(slug)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
+
+	files := getBaseTemplates()
+	files = append(files, "web/templates/pages/blog/post.html")
+
+	t, _ := template.ParseFiles(files...)
+	err = t.ExecuteTemplate(w, "base", post)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
