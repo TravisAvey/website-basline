@@ -1,13 +1,14 @@
-{{ range . }}
-<div class="card w-96 bg-base-100 shadow-xl image-full">
-  <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
-  <div class="card-body">
-    <h2 class="card-title">{{ .Article.Title }}</h2>
-    <p>{{ .Article.Summary }}</p>
-    <div class="card-actions justify-end">
-      <button hx-get="/blog/posts/{{ .Article.ID }}" hx-target="#content" class="btn btn-primary">Read More</button>
+<section class="container grid grid-cols-3 gap-8 my-8 mx-auto">
+  {{ range . }}
+  <div class="card w-96 bg-base-100 shadow-xl image-full">
+    <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
+    <div class="card-body">
+      <h2 class="card-title">{{ .Article.Title }}</h2>
+      <p>{{ .Article.Summary }}</p>
+      <div class="card-actions justify-end">
+        <button hx-get="/blog/posts/{{ .Article.ID }}" hx-target="#content" class="btn btn-primary">Read More</button>
+      </div>
     </div>
   </div>
-</div>
-
-{{ end }}
+  {{ end }}
+</section>
