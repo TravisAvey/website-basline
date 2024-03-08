@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -50,8 +49,11 @@ func getImage(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	img := fmt.Sprint(image)
-	w.Write([]byte(img))
+	t, _ := template.ParseFiles("web/templates/pages/gallery/image.html")
+	err = t.Execute(w, image)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }
 
 // get all images
