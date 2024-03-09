@@ -1,10 +1,20 @@
 package routes
 
 import (
+	"html/template"
 	"net/http"
 	"strconv"
 
 	"github.com/travisavey/baseline/app/database"
+)
+
+type ResponseType int
+
+const (
+	Info ResponseType = iota
+	Warn
+	Success
+	Error
 )
 
 func getBaseTemplates() []string {
@@ -80,4 +90,16 @@ func parseImageData(r *http.Request) (database.Image, error) {
 	}
 
 	return image, nil
+}
+
+func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error {
+	// figure out data: msg and probably css class
+	// parse correct template and execute with data
+	t, _ := template.ParseFiles("web/templates/pages/contact.html")
+	err := t.Execute(w, nil)
+	if err != nil {
+		w.Write([]byte("Error processing templates.."))
+	}
+
+	return nil
 }
