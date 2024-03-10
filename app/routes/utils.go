@@ -1,10 +1,20 @@
 package routes
 
 import (
+	"html/template"
 	"net/http"
 	"strconv"
 
 	"github.com/travisavey/baseline/app/database"
+)
+
+type ResponseType int
+
+const (
+	Info ResponseType = iota
+	Warn
+	Success
+	Error
 )
 
 func getBaseTemplates() []string {
@@ -80,4 +90,28 @@ func parseImageData(r *http.Request) (database.Image, error) {
 	}
 
 	return image, nil
+}
+
+func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error {
+	var resType string
+	switch res {
+	case Warn:
+		resType = "warn"
+	case Info:
+		resType = "info"
+	case Success:
+		resType = "success"
+	case Error:
+		resType = "error"
+	}
+	data := struct {
+		Message string
+		Type    string
+	}{
+		Message: msg,
+		Type:    resType,
+	}
+
+	t, _ := template.ParseFiles("web/templates/responses/message.html")
+	return t.Execute(w, data)
 }
