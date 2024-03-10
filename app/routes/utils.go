@@ -93,13 +93,25 @@ func parseImageData(r *http.Request) (database.Image, error) {
 }
 
 func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error {
-	// figure out data: msg and probably css class
-	// parse correct template and execute with data
-	t, _ := template.ParseFiles("web/templates/pages/contact.html")
-	err := t.Execute(w, nil)
-	if err != nil {
-		w.Write([]byte("Error processing templates.."))
+	var resType string
+	switch res {
+	case Warn:
+		resType = "warn"
+	case Info:
+		resType = "info"
+	case Success:
+		resType = "success"
+	case Error:
+		resType = "error"
+	}
+	data := struct {
+		Message string
+		Type    string
+	}{
+		Message: msg,
+		Type:    resType,
 	}
 
-	return nil
+	t, _ := template.ParseFiles("web/templates/responses/message.html")
+	return t.Execute(w, data)
 }

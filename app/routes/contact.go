@@ -27,11 +27,12 @@ func contactForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("web/templates/responses/contact.html")
-	err = t.Execute(w, nil)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-	}
+	sendResponseMsg("Message sent successfully.", Success, w)
+	//t, _ := template.ParseFiles("web/templates/responses/contact.html")
+	//err = t.Execute(w, nil)
+	//if err != nil {
+	//	w.Write([]byte(err.Error()))
+	//}
 }
 
 //
