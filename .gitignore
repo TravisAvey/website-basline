@@ -23,3 +23,6 @@ go.work
 # npm stuff
 **/node_modules
 **/dist
+
+# logs
+logs/*
