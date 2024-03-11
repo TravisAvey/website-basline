@@ -93,25 +93,29 @@ func parseImageData(r *http.Request) (database.Image, error) {
 }
 
 func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error {
-	var resType string
-	switch res {
-	case Warn:
-		resType = "warn"
-	case Info:
-		resType = "info"
-	case Success:
-		resType = "success"
-	case Error:
-		resType = "error"
-	}
 	data := struct {
 		Message string
-		Type    string
 	}{
 		Message: msg,
-		Type:    resType,
 	}
 
-	t, _ := template.ParseFiles("web/templates/responses/message.html")
-	return t.Execute(w, data)
+	var t *template.Template
+	var err error
+
+	switch res {
+	case Warn:
+		t, err = template.ParseFiles("web/templates/messages/warn.html")
+	case Info:
+		t, err = template.ParseFiles("web/templates/messages/info.html")
+	case Success:
+		t, err = template.ParseFiles("web/templates/messages/success.html")
+	case Error:
+		t, err = template.ParseFiles("web/templates/messages/error.html")
+	}
+
+	if err != nil {
+		return err
+	} else {
+		return t.Execute(w, data)
+	}
 }
