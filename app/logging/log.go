@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	consoleLog log.Logger
-	accessLog  log.Logger
-	dataLog    log.Logger
+	ConsoleLog log.Logger
+	AccessLog  log.Logger
+	DataLog    log.Logger
 )
 
 type LogLevel uint8
@@ -27,7 +27,7 @@ const (
 )
 
 func Setup() {
-	consoleLog = log.Logger{
+	ConsoleLog = log.Logger{
 		TimeFormat: "15:04:05",
 		Caller:     1,
 		Writer: &log.ConsoleWriter{
@@ -36,7 +36,7 @@ func Setup() {
 		},
 	}
 
-	accessLog = log.Logger{
+	AccessLog = log.Logger{
 		Level: log.InfoLevel,
 		Writer: &log.FileWriter{
 			Filename:     "logs/access.log",
@@ -48,7 +48,7 @@ func Setup() {
 		},
 	}
 
-	dataLog = log.Logger{
+	DataLog = log.Logger{
 		Level: log.InfoLevel,
 		Writer: &log.FileWriter{
 			Filename:     "logs/data.log",
@@ -61,41 +61,33 @@ func Setup() {
 	}
 
 	runner := cron.New(cron.WithLocation(time.Local))
-	runner.AddFunc("0 0 * * *", func() { accessLog.Writer.(*log.FileWriter).Rotate() })
-	runner.AddFunc("0 0 * * *", func() { dataLog.Writer.(*log.FileWriter).Rotate() })
+	runner.AddFunc("0 0 * * *", func() { AccessLog.Writer.(*log.FileWriter).Rotate() })
+	runner.AddFunc("0 0 * * *", func() { DataLog.Writer.(*log.FileWriter).Rotate() })
 	go runner.Run()
-}
-
-func LogAccess(msg string) {
-	accessLog.Info().Msg(msg)
-}
-
-func LogData(msg string) {
-	dataLog.Info().Msg(msg)
 }
 
 func SetAccessLogLevel(level LogLevel) {
 	switch level {
 	case Trace:
-		accessLog.Level = log.TraceLevel
+		AccessLog.Level = log.TraceLevel
 	case Debug:
-		accessLog.Level = log.DebugLevel
+		AccessLog.Level = log.DebugLevel
 	case Info:
-		accessLog.Level = log.InfoLevel
+		AccessLog.Level = log.InfoLevel
 	case Warn:
-		accessLog.Level = log.WarnLevel
+		AccessLog.Level = log.WarnLevel
 	}
 }
 
 func SetDataLogLevel(level LogLevel) {
 	switch level {
 	case Trace:
-		dataLog.Level = log.TraceLevel
+		DataLog.Level = log.TraceLevel
 	case Debug:
-		dataLog.Level = log.DebugLevel
+		DataLog.Level = log.DebugLevel
 	case Info:
-		dataLog.Level = log.InfoLevel
+		DataLog.Level = log.InfoLevel
 	case Warn:
-		dataLog.Level = log.WarnLevel
+		DataLog.Level = log.WarnLevel
 	}
 }

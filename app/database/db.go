@@ -7,7 +7,6 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/travisavey/baseline/app/logging"
 )
 
 var db *sql.DB
@@ -39,7 +38,6 @@ func getConnectionInfo() (string, error) {
 }
 
 func Init() error {
-	logging.LogData("Init DB")
 	dsn, err := getConnectionInfo()
 	if err != nil {
 		return err
