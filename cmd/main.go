@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	logging.Setup()
+
 	var err error
 
 	model.Init()
@@ -16,8 +18,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	logging.Setup()
 
 	routes.Init()
 }
