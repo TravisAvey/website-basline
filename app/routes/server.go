@@ -36,6 +36,7 @@ func Init() {
 	router.HandleFunc("/dashboard", dashboard)
 
 	router.Use(mux.CORSMethodMiddleware(router))
+	router.Use(loggingMiddleware)
 
 	log.Fatal(http.ListenAndServe(":9000", router))
 }

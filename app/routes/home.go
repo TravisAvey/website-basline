@@ -1,15 +1,11 @@
 package routes
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
-
-	"github.com/travisavey/baseline/app/logging"
 )
 
-func index(w http.ResponseWriter, r *http.Request) {
-	logging.LogAccess(fmt.Sprintf("index page requested by: %s", r.RemoteAddr))
+func index(w http.ResponseWriter, _ *http.Request) {
 	// TODO: data from DB for the "home page"
 	data := struct {
 		Text string
