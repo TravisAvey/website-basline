@@ -1,6 +1,8 @@
 package database
 
 import (
+	"html/template"
+
 	"github.com/lib/pq"
 )
 
@@ -18,15 +20,16 @@ type User struct {
 // /////////////////////////////////////////////////////////////////
 // Article the struct to hold a blog post
 type Article struct {
-	Title       string      `json:"title"`
-	ImageURL    string      `json:"imageURL"`
-	Summary     string      `json:"summary"`
-	Keywords    string      `json:"keywords"`
-	Content     string      `json:"content"`
-	Slug        string      `json:"slug"`
-	DatePosted  pq.NullTime `json:"datePosted"`
-	DateUpdated pq.NullTime `json:"dateUpdated"`
-	ID          int64       `json:"id"`
+	Title       string        `json:"title"`
+	ImageURL    string        `json:"imageURL"`
+	Summary     string        `json:"summary"`
+	Keywords    string        `json:"keywords"`
+	Content     string        `json:"content"`
+	HTML        template.HTML `json:"html"`
+	Slug        string        `json:"slug"`
+	DatePosted  pq.NullTime   `json:"datePosted"`
+	DateUpdated pq.NullTime   `json:"dateUpdated"`
+	ID          int64         `json:"id"`
 }
 
 // Category the struct that holds the category type
