@@ -13,16 +13,16 @@
       class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
       <li class="p-1"><a href="/">home</a></li>
       <li class="p-1">
-        <p x-on:click="open = ! open" hx-get="/about" hx-target="#content">about</p>
+        <a x-on:click="open = ! open" href="/about">about</a>
       </li>
       <li class="p-1">
-        <p x-on:click="open = ! open" hx-get="/contact" hx-target="#content">contact</p>
+        <a x-on:click="open = ! open" href="/contact">contact</a>
       </li>
       <li class="p-1">
-        <p x-on:click="open = ! open" hx-get="/gallery" hx-target="#content">gallery</p>
+        <a x-on:click="open = ! open" href="/gallery">gallery</a>
       </li>
       <li class="p-1">
-        <p x-on:click="open = ! open" hx-get="/blog" hx-target="#content">blog</p>
+        <a x-on:click="open = ! open" href="/blog">blog</a>
       </li>
     </ul>
   </div>

@@ -1,3 +1,26 @@
+{{ define "metaTags" }}
+<meta name="hello" content="hello">
+{{ end }}
+
+{{ define "title" }}_Contact{{ end }}
+
+{{ define "header" }}
+<header class="hero min-h-screen"
+  style="background-image: url(https://images.unsplash.com/photo-1654365432316-86dbf215553c?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);">
+  <div class="hero-overlay bg-opacity-60 relative"></div>
+  <div class="hero-content text-center text-neutral-content relative">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">_Contact Us</h1>
+      <p class="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi.
+        In deleniti eaque aut repudiandae et a id nisi.</p>
+      <button class="btn btn-primary">Get Started</button>
+    </div>
+  </div>
+</header>
+{{ end }}
+
+{{ define "content" }}
+
 <section class="container grid grid-cols-1 mx-auto p-16 gap-8 max-w-2xl">
   <h1 class="text-2xl text-orange-500">{{ .Text }}</h1>
   <form hx-post="/contact/submit">
@@ -16,3 +39,5 @@
     <button type="submit" class="btn btn-primary my-4">Send</button>
   </form>
 </section>
+
+{{ end }}

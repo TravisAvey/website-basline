@@ -17,8 +17,10 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/blog.html")
-	err = t.Execute(w, posts)
+	files := getBaseTemplates()
+	files = append(files, "web/templates/pages/blog.html")
+	t, _ := template.ParseFiles(files...)
+	err = t.ExecuteTemplate(w, "base", posts)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
