@@ -5,13 +5,31 @@
 {{ define "title" }} {{ .Article.Title }} {{ end }}
 
 {{ define "content" }}
-<img src="{{ .Article.ImageURL }}" />
 
-<small>{{ .Article.Summary }}</small>
-<p>Date Posted: {{ .Article.DatePosted }}</p>
-<p>Date Updated: {{ .Article.DateUpdated }}</p>
-<p>Keywords: {{ .Article.Keywords }}</p>
-<p>Slug: {{ .Article.Slug }}</p>
-<p>{{ .Article.Content }}</p>
+
+
+<section class="text-center pt-16 md:pt-32">
+  <h1 class="font-bold break-normal text-3xl md:text-5xl">{{ .Article.Title }}</h1>
+  <p class="text-sm md:text-base text-orange-500 font-bold"
+    x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">{{
+    .Article.DatePosted.Time }}</p>
+</section>
+
+<section class="container w-full max-w-6xl mx-auto bg-white bg-cover mt-8 rounded"
+  style="background-image:url('{{ .Article.ImageURL }}'); height: 50vh;"></section>
+
+<article class="container max-w-5xl mx-auto -mt-32">
+
+  <div class="mx-0 sm:mx-6">
+    <div class="bg-white w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal"
+      style="font-family:Georgia,serif;">
+      {{ .Article.HTML }}
+    </div>
+  </div>
+
+
+</article>
+
+
 
 {{ end }}

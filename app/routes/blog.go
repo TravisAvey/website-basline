@@ -70,6 +70,9 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 	}
 
+	content := []byte(post.Article.Content)
+	post.Article.HTML = template.HTML(content)
+
 	files := getBaseTemplates()
 	files = append(files, "web/templates/pages/blog/post.html")
 
