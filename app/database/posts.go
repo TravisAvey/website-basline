@@ -65,7 +65,7 @@ func GetAllPosts() ([]Post, error) {
 	return posts, nil
 }
 
-func GetPost(id int64) (Post, error) {
+func GetPostByID(id int64) (Post, error) {
 	var article Article
 	statement := `select title, summary, slug, imageurl, keywords, dateupdated, dateposted, content from posts where id = $1;`
 	article.ID = id

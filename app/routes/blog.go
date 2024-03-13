@@ -39,7 +39,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // get a single post
-func getPost(w http.ResponseWriter, r *http.Request) {
+func getPostByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
 		// TODO: log Error
@@ -48,7 +48,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var post database.Post
-	post, err = database.GetPost(id)
+	post, err = database.GetPostByID(id)
 	if err != nil {
 		// TODO: log error
 		w.Write([]byte(err.Error()))

@@ -7,7 +7,7 @@ create table posts (
   content text,
   summary text,
   keywords text,
-  slug varchar(64),
+  slug varchar(64) not null unique,
   primary key(id)
 );
 create table categories (
