@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -13,11 +12,12 @@ func about(w http.ResponseWriter, _ *http.Request) {
 		Text: "About Page",
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/about.html")
-	err := t.Execute(w, data)
+	files := getBaseTemplates()
+	files = append(files, "web/templates/pages/about.html")
+	t, _ := template.ParseFiles(files...)
+	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		errStr := fmt.Sprint("error: ", err.Error())
-		w.Write([]byte(errStr))
+		w.Write([]byte(err.Error()))
 	}
 }
 

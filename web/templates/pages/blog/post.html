@@ -4,21 +4,23 @@
 
 {{ define "title" }} {{ .Article.Title }} {{ end }}
 
+{{ define "header" }}
+<header class="hero h-[60vh]" style="background-image: url({{ .Article.ImageURL }});">
+  <div class="hero-content text-center text-neutral-content relative">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">{{ .Article.Title }}</h1>
+      <p class="text-sm md:text-base text-orange-500 font-bold"
+        x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">{{
+        .Article.DatePosted.Time }}</p>
+      <p class="mb-5">{{ .Article.Summary }}</p>
+    </div>
+  </div>
+</header>
+{{ end }}
+
+
 {{ define "content" }}
-
-
-
-<section class="text-center pt-16 md:pt-32">
-  <h1 class="font-bold break-normal text-3xl md:text-5xl">{{ .Article.Title }}</h1>
-  <p class="text-sm md:text-base text-orange-500 font-bold"
-    x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">{{
-    .Article.DatePosted.Time }}</p>
-</section>
-
-<section class="container w-full max-w-6xl mx-auto bg-white bg-cover mt-8 rounded"
-  style="background-image:url('{{ .Article.ImageURL }}'); height: 50vh;"></section>
-
-<article class="container max-w-5xl mx-auto -mt-32">
+<article class="container max-w-5xl mx-auto -mt-32 z-50">
 
   <div class="mx-0 sm:mx-6">
     <div class="bg-white w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal"
@@ -26,10 +28,5 @@
       {{ .Article.HTML }}
     </div>
   </div>
-
-
 </article>
-
-
-
 {{ end }}

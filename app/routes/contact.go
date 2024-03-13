@@ -12,10 +12,12 @@ func contact(w http.ResponseWriter, _ *http.Request) {
 		Text: "Contact Page",
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/contact.html")
-	err := t.Execute(w, data)
+	files := getBaseTemplates()
+	files = append(files, "web/templates/pages/contact.html")
+	t, _ := template.ParseFiles(files...)
+	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		w.Write([]byte("Error processing templates.."))
+		w.Write([]byte(err.Error()))
 	}
 }
 
