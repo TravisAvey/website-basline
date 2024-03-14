@@ -64,10 +64,22 @@ func getImages(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
+	data := struct {
+		ImageURL string
+		Title    string
+		Summary  string
+		Images   []database.Image
+	}{
+		ImageURL: images[0].Image.ImageURL,
+		Title:    images[0].Image.Title,
+		Summary:  images[0].Image.Summary,
+		Images:   images,
+	}
+
 	files := getBaseTemplates()
 	files = append(files, "web/templates/pages/gallery.html")
 	t, _ := template.ParseFiles(files...)
-	err = t.ExecuteTemplate(w, "base", images)
+	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
