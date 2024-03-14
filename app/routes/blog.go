@@ -17,10 +17,34 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
+	post, posts := posts[0], posts[1:]
+	for i := range posts {
+		posts[i].Article.PostedStr = parseDate(posts[i].Article.DatePosted.Time)
+	}
+	numPosts := len(posts)
+
+	data := struct {
+		ImageURL   string
+		Title      string
+		Summary    string
+		Slug       string
+		DatePosted string
+		Posts      []database.Post
+		NumPosts   int
+	}{
+		Posts:      posts,
+		ImageURL:   post.Article.ImageURL,
+		Title:      post.Article.Title,
+		Summary:    post.Article.Summary,
+		Slug:       post.Article.Slug,
+		DatePosted: parseDate(post.Article.DatePosted.Time),
+		NumPosts:   numPosts,
+	}
+
 	files := getBaseTemplates()
 	files = append(files, "web/templates/pages/blog.html")
 	t, _ := template.ParseFiles(files...)
-	err = t.ExecuteTemplate(w, "base", posts)
+	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
@@ -74,6 +98,8 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 
 	content := []byte(post.Article.Content)
 	post.Article.HTML = template.HTML(content)
+
+	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
 
 	files := getBaseTemplates()
 	files = append(files, "web/templates/pages/blog/post.html")

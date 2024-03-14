@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/travisavey/baseline/app/database"
 )
@@ -117,4 +119,9 @@ func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error 
 	} else {
 		return t.Execute(w, data)
 	}
+}
+
+func parseDate(time time.Time) string {
+	y, m, d := time.Date()
+	return fmt.Sprintf("%d/%d/%d", y, m, d)
 }
