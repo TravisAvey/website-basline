@@ -100,10 +100,29 @@ insert into photo_categories(category) values
   ('family');
 
 insert into photos(image_url, title, summary, is_gallery)
-  values (
+  values 
+  (
     'https://neonspot-images.nyc3.digitaloceanspaces.com/matterhorn.jpg',
     'The Matterhorn',
     'The Matterhorn at sunrise',
+    true
+  ),
+  (
+    'https://picsum.photos/1920/1080',
+    'Random Image #1',
+    'Lorem Picsum Images',
+    true
+  ),
+  (
+    'https://picsum.photos/1000/1000',
+    'Random Image #2',
+    'Lorem Picsum Images',
+    true
+  ),
+  (
+    'https://picsum.photos/1080/1920',
+    'Random Image #3',
+    'Lorem Picsum Images',
     true
   );
 
