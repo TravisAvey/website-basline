@@ -7,9 +7,11 @@ import (
 
 func contact(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
-		Text string
+		Text     string
+		ImageURL string
 	}{
-		Text: "Contact Page",
+		Text:     "Contact Page",
+		ImageURL: "https://picsum.photos/1920/1080/?blur=2",
 	}
 
 	files := getBaseTemplates()
