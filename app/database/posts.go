@@ -98,7 +98,7 @@ func GetPostByID(id int64) (Post, error) {
 }
 
 func GetPostBySlug(slug string) (Post, error) {
-	statement := `select id, title, summary, imageurl, keywords, dateupdated, dateposted, content from posts where slug = $1`
+	statement := `select id, title, summary, imageurl, keywords, dateposted, dateupdated, content from posts where slug = $1`
 	var article Article
 	article.Slug = slug
 	row, err := db.Query(statement, slug)

@@ -10,8 +10,9 @@
     <div class="max-w-md">
       <h1 class="mb-5 text-5xl font-bold">{{ .Article.Title }}</h1>
       <p class="text-sm md:text-base text-orange-500 font-bold"
-        x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">{{
-        .Article.DatePosted.Time }}</p>
+        x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
+        {{ .Article.PostedStr }}
+      </p>
       <p class="mb-5">{{ .Article.Summary }}</p>
     </div>
   </div>

@@ -27,6 +27,8 @@ type Article struct {
 	Content     string        `json:"content"`
 	HTML        template.HTML `json:"html"`
 	Slug        string        `json:"slug"`
+	PostedStr   string        `json:"postedStr"`
+	UpdatedStr  string        `json:"updatedStr"`
 	DatePosted  pq.NullTime   `json:"datePosted"`
 	DateUpdated pq.NullTime   `json:"dateUpdated"`
 	ID          int64         `json:"id"`
