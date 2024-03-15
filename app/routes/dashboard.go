@@ -10,15 +10,16 @@ import (
 
 func dashboard(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
-		Text string
+		Title string
 	}{
-		Text: "Dashboard Page",
+		Title: "Dashboard Page",
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/dashboard.html")
-	err := t.Execute(w, data)
+	files := []string{"web/templates/base.html", "web/templates/pages/dashboard.html"}
+	t, _ := template.ParseFiles(files...)
+	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
-		w.Write([]byte("Error processing templates.."))
+		w.Write([]byte(err.Error()))
 	}
 }
 
