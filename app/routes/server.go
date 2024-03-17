@@ -36,6 +36,8 @@ func Init() {
 	router.HandleFunc("/login", login).Methods("GET")
 	router.HandleFunc("/dashboard", dashboard)
 
+	router.NotFoundHandler = http.HandlerFunc(notFound)
+
 	router.Use(mux.CORSMethodMiddleware(router))
 	router.Use(loggingMiddleware)
 

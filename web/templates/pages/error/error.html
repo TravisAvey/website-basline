@@ -1,0 +1,18 @@
+{{ define "metaTags" }}{{ end }}
+{{ define "title" }}
+{{ .Title }}
+{{ end }}
+{{ define "header" }}
+<header class="hero h-[60vh]" style="background-image: url({{ .ImageURL }});">
+  <div class="hero-overlay bg-opacity-60 relative"></div>
+  <div class="hero-content text-center text-neutral-content relative">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">{{ .ErrorCode }}</h1>
+      <p class="mb-5">{{ .Message }}</p>
+      <a href="/" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Go Home</a>
+    </div>
+  </div>
+</header>
+{{ end }}
+
+{{ define "content" }}{{ end }}
