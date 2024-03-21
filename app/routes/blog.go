@@ -13,7 +13,14 @@ import (
 func blog(w http.ResponseWriter, _ *http.Request) {
 	posts, err := database.GetAllPosts()
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		return
 	}
 
@@ -46,6 +53,7 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -54,12 +62,27 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 func createPost(w http.ResponseWriter, r *http.Request) {
 	post, err := parseFormData(r)
 	if err != nil {
-		w.Write([]byte("error parsing form"))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end.",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		return
 	}
 
 	err = database.NewPost(post)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end. We couldn't create a New Post",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -68,22 +91,35 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 func getPostByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
 		// TODO: log Error
-		w.Write([]byte(err.Error()))
 		return
 	}
 
 	var post database.Post
 	post, err = database.GetPostByID(id)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte(err.Error()))
 		return
 	}
 
 	t, _ := template.ParseFiles("web/templates/pages/blog/post.html")
 	err = t.Execute(w, post)
 	if err != nil {
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -93,7 +129,15 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 
 	post, err := database.GetPostBySlug(slug)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		return
 	}
 
 	content := []byte(post.Article.Content)
@@ -107,6 +151,7 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err = t.ExecuteTemplate(w, "base", post)
 	if err != nil {
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -115,8 +160,14 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 func getPosts(w http.ResponseWriter, _ *http.Request) {
 	posts, err := database.GetAllPosts()
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte("Error retreiving all posts"))
 		return
 	}
 
@@ -129,7 +180,14 @@ func getPosts(w http.ResponseWriter, _ *http.Request) {
 func updatePost(w http.ResponseWriter, r *http.Request) {
 	post, err := parseFormData(r)
 	if err != nil {
-		w.Write([]byte("error parsing form"))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		return
 	}
 
@@ -138,7 +196,14 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 	// Thought I had this working before...
 	err = database.UpdatePost(post)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end--Unable to update the post!",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 	}
 }
 
@@ -146,12 +211,26 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 func deletePost(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		return
 	}
 	err = database.DeletePost(id)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		return
 	}
 }

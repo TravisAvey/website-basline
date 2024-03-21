@@ -24,12 +24,7 @@ func notFound(w http.ResponseWriter, _ *http.Request) {
 }
 
 func notAllowed(w http.ResponseWriter, _ *http.Request) {
-	msg := struct {
-		Message   string
-		Title     string
-		ImageURL  string
-		ErrorCode int
-	}{
+	msg := errMsg{
 		ErrorCode: 404,
 		Message:   "Sorry, the method requested is not allowed",
 		Title:     "_Not Allowed",

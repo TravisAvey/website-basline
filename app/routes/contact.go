@@ -19,6 +19,7 @@ func contact(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -27,7 +28,8 @@ func contact(w http.ResponseWriter, _ *http.Request) {
 func contactForm(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		sendResponseMsg("Something went wrong!", Error, w)
+		// TODO: Log error
 		return
 	}
 

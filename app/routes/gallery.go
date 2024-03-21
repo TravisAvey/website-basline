@@ -19,6 +19,7 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles("web/templates/pages/gallery.html")
 	err := t.Execute(w, data)
 	if err != nil {
+		// TODO: log error
 		w.Write([]byte("Error processing templates.."))
 	}
 }
@@ -27,11 +28,27 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 func newImage(w http.ResponseWriter, r *http.Request) {
 	image, err := parseImageData(r)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 
 	err = database.CreateImage(image)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end--Unable to create the image",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -40,18 +57,35 @@ func newImage(w http.ResponseWriter, r *http.Request) {
 func getImage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 		return
 	}
 
 	image, err := database.GetImage(id)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 		return
 	}
 	t, _ := template.ParseFiles("web/templates/pages/gallery/image.html")
 	err = t.Execute(w, image)
 	if err != nil {
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -60,6 +94,14 @@ func getImage(w http.ResponseWriter, r *http.Request) {
 func getImages(w http.ResponseWriter, _ *http.Request) {
 	images, err := database.GetAllImages()
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -81,6 +123,7 @@ func getImages(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -89,12 +132,28 @@ func getImages(w http.ResponseWriter, _ *http.Request) {
 func updateImage(w http.ResponseWriter, r *http.Request) {
 	image, err := parseImageData(r)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 		return
 	}
 
 	err = database.UpdateImage(image)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 	}
 }
@@ -103,12 +162,28 @@ func updateImage(w http.ResponseWriter, r *http.Request) {
 func deleteImage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 		return
 	}
 
 	err = database.DeleteImage(id)
 	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end--unable to delete image",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 	}
 }

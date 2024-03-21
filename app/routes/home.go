@@ -19,6 +19,7 @@ func index(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		// TODO: Log error
 		w.Write([]byte(err.Error()))
 	}
 }
