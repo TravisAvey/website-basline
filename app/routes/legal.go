@@ -3,6 +3,8 @@ package routes
 import (
 	"html/template"
 	"net/http"
+
+	"github.com/travisavey/baseline/app/logging"
 )
 
 func termsOfUse(w http.ResponseWriter, _ *http.Request) {
@@ -19,6 +21,7 @@ func termsOfUse(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		logging.AccessLog.Error().Str("error", err.Error())
 		w.Write([]byte(err.Error()))
 	}
 }
