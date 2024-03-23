@@ -33,6 +33,7 @@ func Init() {
 	router.HandleFunc("/gallery/{id}", getImage).Methods("DELETE")
 	router.HandleFunc("/contact", contact)
 	router.HandleFunc("/contact/submit", contactForm).Methods("POST")
+	router.HandleFunc("/legal/terms", termsOfUse).Methods("GET")
 	router.HandleFunc("/login", login).Methods("GET")
 	router.HandleFunc("/dashboard", dashboard)
 
