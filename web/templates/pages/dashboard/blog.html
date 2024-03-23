@@ -1,0 +1,21 @@
+<h2>Number of Posts: {{ .NumPosts }}</h2>
+{{ range .Posts }}
+<div class="card w-96 bg-base-100 shadow-xl image-full">
+  <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
+  <div class="card-body">
+    <h2 class="card-title">{{ .Article.Title }}</h2>
+    <p class="mb-1 text-blue-300">
+      Posted:
+      <span x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
+        {{ .Article.PostedStr }}
+      </span>
+    </p>
+    <p>{{ .Article.Summary }}</p>
+    <div class="card-actions justify-end">
+      <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-success">View</a>
+      <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-primary">Update</a>
+      <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-warning">Delete</a>
+    </div>
+  </div>
+</div>
+{{ end }}
