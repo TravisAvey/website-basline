@@ -54,6 +54,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/blog.html")
 	err = t.Execute(w, data)
 	if err != nil {
+		w.Write([]byte(err.Error()))
 		sendResponseMsg("Failed to execute template", Error, w)
 	}
 }
