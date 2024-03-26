@@ -25,21 +25,20 @@
         <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-success">View</a>
         <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-warning">Update</a>
         <button href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-error">Delete</button>
-        <div x-data="{ open_{{ .Article.ID }}: false }" tabindex="1">
-          <button class="btn btn-error" x-on:click="open_{{ .Article.ID }} = true">Delete</button>
-          <dialog x-show="open_{{ .Article.ID }}" x-cloak x-transition class="modal" role="dialog">
-            <div class="modal-box">
-              <h3 class="font-bold text-lg">Delete Post: {{ .Article.Title }}</h3>
-              <p class="py-4">Are you sure? This cannot be undone and this post will be gone forever</p>
-              <div class="modal-action">
-                <form>
-                  <button class="btn btn-info" x-on:click="open_{{ .Article.ID }}=false">Cancel</button>
-                  <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error">Delete</button>
-                </form>
-              </div>
+        <!-- Need to make a simple js method for this ?? -->
+        <button class="btn btn-error" onclick="modal_{{ .Article.ID }}.showModal()">Delete</button>
+        <dialog id="modal_{{ .Article.ID }}" class="modal" role="dialog">
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">Delete Post: {{ .Article.Title }}</h3>
+            <p class="py-4">Are you sure? This cannot be undone and this post will be gone forever</p>
+            <div class="modal-action">
+              <form>
+                <button class="btn btn-info">Cancel</button>
+                <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error">Delete</button>
+              </form>
             </div>
-          </dialog>
-        </div>
+          </div>
+        </dialog>
       </div>
     </div>
   </div>
