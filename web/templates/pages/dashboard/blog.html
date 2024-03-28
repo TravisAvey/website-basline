@@ -26,7 +26,7 @@
         <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-warning">Update</a>
         <button href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-error">Delete</button>
         <!-- Need to make a simple js method for this ?? -->
-        <button class="btn btn-error" onclick="modal_{{ .Article.ID }}.showModal()">Delete</button>
+        <button class="btn btn-error" onclick="showDeleteDialog({{ .Article.ID }})">Delete</button>
         <dialog id="modal_{{ .Article.ID }}" class="modal" role="dialog">
           <div class="modal-box">
             <h3 class="font-bold text-lg">Delete Post: {{ .Article.Title }}</h3>
