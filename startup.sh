@@ -6,6 +6,7 @@
 pushd web/static
 npm run build
 npm run alpine
+npm run scripts
 popd
 
 go run cmd/main.go

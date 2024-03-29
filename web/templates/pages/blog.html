@@ -34,7 +34,7 @@
       <p class="mb-1 text-blue-300">
         Posted:
         <span x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
-          {{ .Article.DatePosted.Time }}
+          {{ .Article.PostedStr }}
         </span>
       </p>
       <p>{{ .Article.Summary }}</p>

@@ -18,7 +18,7 @@
         </div>
         Home
       </div>
-      <div role="button" tabindex="0"
+      <div role="button" tabindex="0" hx-get="/dashboard/posts" hx-target="#dashboard"
         class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none">
         <div class="grid place-items-center mr-4">
           <i class="fa-solid fa-newspaper"></i>
@@ -48,7 +48,7 @@
       </div>
     </div>
   </aside>
-  <section class="main -ml-48 flex flex-grow flex-col p-4 transition-all duration-150 ease-in md:ml-0">
+  <section id="dashboard" class="main -ml-48 p-4 transition-all duration-150 ease-in md:ml-0">
     <div
       class="flex h-full items-center justify-center bg-white text-gray-800 text-center text-5xl font-bold shadow-md">
       Dashboard Content
