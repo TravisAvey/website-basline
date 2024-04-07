@@ -37,6 +37,7 @@ func Init() {
 	router.HandleFunc("/login", login).Methods("GET")
 	router.HandleFunc("/dashboard", dashboard)
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
+	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
