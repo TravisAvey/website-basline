@@ -58,3 +58,28 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 		sendResponseMsg("Failed to execute template", Error, w)
 	}
 }
+
+func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
+	imgs, err := database.GetAllImages()
+	if err != nil {
+		sendResponseMsg("Failed to get images", Error, w)
+		return
+	}
+
+	numImgs := len(imgs)
+
+	data := struct {
+		Images    []database.Image
+		NumImages int
+	}{
+		Images:    imgs,
+		NumImages: numImgs,
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/gallery.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		sendResponseMsg("Failed to execute template", Error, w)
+	}
+}
