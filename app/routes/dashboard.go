@@ -59,28 +59,24 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func dashboardGallery(w http.ResponseWriter, r *http.Request) {
-	posts, err := database.GetAllPosts()
+func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
+	imgs, err := database.GetAllImages()
 	if err != nil {
 		sendResponseMsg("Failed to get blog posts", Error, w)
 		return
 	}
 
-	for i := range posts {
-		posts[i].Article.PostedStr = parseDate(posts[i].Article.DatePosted.Time)
-		posts[i].Article.UpdatedStr = parseDate(posts[i].Article.DateUpdated.Time)
-	}
-	numPosts := len(posts)
+	numImgs := len(imgs)
 
 	data := struct {
-		Posts    []database.Post
-		NumPosts int
+		Images    []database.Image
+		NumImages int
 	}{
-		Posts:    posts,
-		NumPosts: numPosts,
+		Images:    imgs,
+		NumImages: numImgs,
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/dashboard/blog.html")
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/gallery.html")
 	err = t.Execute(w, data)
 	if err != nil {
 		w.Write([]byte(err.Error()))

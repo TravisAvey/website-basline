@@ -1,20 +1,13 @@
-<h2 class="m-4 text-xl text-gray-800">Number of Posts: {{ .NumPosts }}</h2>
+<h2 class="m-4 text-xl text-gray-800">Number of Images: {{ .NumImages }}</h2>
 <div class="grid grid-cols-3 gap-4 content-start">
-  {{ range .Posts }}
+  {{ range .Images }}
   <div class="card w-96 bg-gray-800 shadow-xl">
-    <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
+    <figure><img src="{{ .Image.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
-        {{ .Article.Title }}
+        {{ .Image.Title }}
       </h2>
-      <p class="mb-1 text-gray-300 font-extralight">
-        Posted:
-        <span class="text-orange-300 font-normal" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"
-          x-text="date">
-          {{ .Article.PostedStr }}
-        </span>
-      </p>
-      <p>{{ .Article.Summary }}</p>
+      <p>{{ .Image.Summary }}</p>
       <div class="card-actions justify-start">
         <p class="text-gray-300 font-extralight">Categories:</p>
         {{ range .Categories }}
@@ -22,16 +15,16 @@
         {{ end }}
       </div>
       <div class="card-actions justify-end">
-        <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-success">View</a>
-        <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-warning">Update</a>
-        <button class="btn btn-error" onclick="showDeleteDialog({{ .Article.ID }})">Delete</button>
-        <dialog id="modal_{{ .Article.ID }}" class="modal" role="dialog">
+        <a href="/gallery/{{ .Image.ID }}" class="btn btn-success">View</a>
+        <a href="/gallery/{{ .Image.ID }}" class="btn btn-warning">Update</a>
+        <button class="btn btn-error" onclick="showDeleteDialog({{ .Image.ID }})">Delete</button>
+        <dialog id="modal_{{ .Image.ID }}" class="modal" role="dialog">
           <div class="modal-box">
-            <h3 class="font-bold text-lg">Delete Post: {{ .Article.Title }}</h3>
-            <p class="py-4">Are you sure? This cannot be undone and this post will be gone forever</p>
+            <h3 class="font-bold text-lg">Delete Image: {{ .Image.Title }}</h3>
+            <p class="py-4">Are you sure? This cannot be undone and this image will be gone forever</p>
             <div class="modal-action">
-              <button class="btn btn-info" onclick="closeDeleteDialog({{ .Article.ID }})">Cancel</button>
-              <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error">Delete</button>
+              <button class="btn btn-info" onclick="closeDeleteDialog({{ .Image.ID }})">Cancel</button>
+              <button hx-delete="/gallery/{{ .Image.ID }}" class="btn btn-error">Delete</button>
             </div>
           </div>
         </dialog>
