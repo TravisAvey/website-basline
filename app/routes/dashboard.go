@@ -62,7 +62,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	imgs, err := database.GetAllImages()
 	if err != nil {
-		sendResponseMsg("Failed to get blog posts", Error, w)
+		sendResponseMsg("Failed to get images", Error, w)
 		return
 	}
 
