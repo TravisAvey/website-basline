@@ -1,15 +1,30 @@
 {{ define "metaTags" }}{{ end }}
 {{ define "title" }}{{ .Title }}{{ end }}
-{{ define "nav" }}{{ end }}
+{{ define "nav" }}
+
+{{ end }}
 {{ define "header" }}{{ end }}
 
 {{ define "content" }}
+<nav class="grid grid-cols-5 p-3 justify-items-stretch bg-gray-800">
+  <div class="col-span-4">
+    <a href="/dashboard" class="btn btn-ghost text-xl">{{ .Title }}</a>
+  </div>
+  <div class="justify-self-end px-2">
+    <button class="btn btn-ghost btn-circle">
+      <div class="indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span class="badge badge-xs badge-primary indicator-item">2</span>
+      </div>
+    </button>
+  </div>
+</nav>
 <div class="flex min-h-screen flex-row bg-gray-100 text-gray-200">
   <aside
     class="sidebar w-48 -translate-x-full transform bg-gray-800 p-4 transition-transform duration-150 ease-in md:translate-x-0 md:shadow-md">
-    <div class="my-4 w-full text-center">
-      <span class="text-xl font-bold">{{ .Title }}</span>
-    </div>
     <div class="my-4">
       <div role="button" tabindex="0"
         class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none">
