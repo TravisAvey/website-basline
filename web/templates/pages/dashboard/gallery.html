@@ -14,8 +14,11 @@
         <div class="badge badge-outline">{{ .Category }}</div>
         {{ end }}
       </div>
-      <div class="card-actions justify-end">
-        <a href="/gallery/{{ .Image.ID }}" class="btn btn-success">View</a>
+      <div class="card-actions justify-end" x-data="{ showImage: false, imageUrl: '', imageDesc: '', imageTitle: '' }">
+        <a @click="showImage = true; imageUrl = '{{ .Image.ImageURL }}'; imageDesc = '{{ .Image.Summary }}'; imageTitle = '{{ .Image.Title }}'"
+          class="btn btn-success">
+          View
+        </a>
         <a href="/gallery/{{ .Image.ID }}" class="btn btn-warning">Update</a>
         <button class="btn btn-error" onclick="showDeleteDialog({{ .Image.ID }})">Delete</button>
         <dialog id="modal_{{ .Image.ID }}" class="modal" role="dialog">
@@ -28,6 +31,20 @@
             </div>
           </div>
         </dialog>
+        <div x-show="showImage" class="fixed inset-0 transition-opacity z-10" aria-hidden="true"
+          @click="showImage = false">
+          <div class="absolute inset-0 bg-black opacity-75"></div>
+          <div x-show="showImage" x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave="transition ease-in duration-200 transform"
+            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            class="fixed z-20 inset-0 overflow-y-auto" x-cloak>
+            <img @click="showImage = false" class="mt-16 h-auto max-w-lg mx-auto" :src="imageUrl" :alt="imageDesc">
+            <p class="mx-auto max-w-lg m-4 text-white text-xl text-center" x-text="imageTitle"></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
