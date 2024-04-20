@@ -6,7 +6,9 @@ package routes
 import (
 	"html/template"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/travisavey/baseline/app/database"
 )
 
@@ -56,6 +58,48 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		sendResponseMsg("Failed to execute template", Error, w)
+	}
+}
+
+// get a single post -- only use from Dashboard.
+func getPostByID(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+	}
+
+	var post database.Post
+	post, err = database.GetPostByID(id)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log error
+		return
+	}
+
+	content := []byte(post.Article.Content)
+	post.Article.HTML = template.HTML(content)
+
+	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/post.html")
+	err = t.Execute(w, post)
+	if err != nil {
+		// TODO: Log error
+		w.Write([]byte(err.Error()))
 	}
 }
 
