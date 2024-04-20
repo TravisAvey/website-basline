@@ -14,6 +14,15 @@
           {{ .Article.PostedStr }}
         </span>
       </p>
+      {{ if .Article.UpdatedStr }}
+      <p class="mb-1 text-gray-300 font-extralight">
+        Updated:
+        <span class="text-orange-300 font-normal" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"
+          x-text="date">
+          {{ .Article.UpdatedStr }}
+        </span>
+      </p>
+      {{ end }}
       <p>{{ .Article.Summary }}</p>
       <div class="card-actions justify-start">
         <p class="text-gray-300 font-extralight">Categories:</p>
@@ -22,7 +31,7 @@
         {{ end }}
       </div>
       <div class="card-actions justify-end">
-        <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-success">View</a>
+        <a hx-get="/dashboard/posts/{{ .Article.ID }}" hx-target="#dashboard" class="btn btn-success">View</a>
         <a href="/blog/posts/s/{{ .Article.Slug }}" class="btn btn-warning">Update</a>
         <button class="btn btn-error" onclick="showDeleteDialog({{ .Article.ID }})">Delete</button>
         <dialog id="modal_{{ .Article.ID }}" class="modal" role="dialog">

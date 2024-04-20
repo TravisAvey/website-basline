@@ -21,7 +21,6 @@ func Init() {
 	router.HandleFunc("/about", about)
 	router.HandleFunc("/blog", blog)
 	router.HandleFunc("/blog/posts/new", createPost).Methods("POST")
-	router.HandleFunc("/blog/posts/{id}", getPostByID).Methods("GET")
 	router.HandleFunc("/blog/posts/s/{slug}", getPostBySlug).Methods("GET")
 	router.HandleFunc("/blog/posts/{id}", updatePost).Methods("PUT")
 	router.HandleFunc("/blog/posts/{id}", deletePost).Methods("DELETE")
@@ -37,6 +36,7 @@ func Init() {
 	router.HandleFunc("/login", login).Methods("GET")
 	router.HandleFunc("/dashboard", dashboard)
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
+	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
 	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)

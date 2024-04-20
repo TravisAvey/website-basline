@@ -87,43 +87,6 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// get a single post
-func getPostByID(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
-	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-		// TODO: log Error
-		return
-	}
-
-	var post database.Post
-	post, err = database.GetPostByID(id)
-	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-		// TODO: log error
-		return
-	}
-
-	t, _ := template.ParseFiles("web/templates/pages/blog/post.html")
-	err = t.Execute(w, post)
-	if err != nil {
-		// TODO: Log error
-		w.Write([]byte(err.Error()))
-	}
-}
-
 func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
