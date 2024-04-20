@@ -1,31 +1,56 @@
 <div class="self-center">
   <header class="hero h-[60vh]" style="background-image: url({{ .Article.ImageURL }});">
 
-    <div class="hero-content text-center text-neutral-content relative">
-      <div class="max-w-md">
-        <h1 class="mb-5 text-5xl font-bold">{{ .Article.Title }}</h1>
-        <p class="text-sm md:text-base text-orange-500 font-bold"
-          x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
-          {{ .Article.PostedStr }}
-        </p>
-        <p class="mb-5">{{ .Article.Summary }}</p>
-      </div>
-    </div>
   </header>
 
 
   <article class="container max-w-5xl mx-auto -mt-32 z-50">
-    <div>
-      <p>Date Posted:
-        <span x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
-          {{ .Article.PostedStr }}
-        </span>
-      </p>
-    </div>
 
     <div class="mx-0 sm:mx-6">
       <div class="bg-white w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal"
         style="font-family:Georgia,serif;">
+        <p>Title:
+          <span class="text-sky-900">
+            {{ .Article.Title }}
+          </span>
+        </p>
+        <p>ID:
+          <span class="text-sky-900">
+            {{ .Article.ID }}
+          </span>
+        </p>
+        <p>Date Posted:
+          <span class="text-sky-900" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"
+            x-text="date">
+            {{ .Article.PostedStr }}
+          </span>
+        </p>
+        {{ if .Article.UpdatedStr}}
+        <p>Date Posted:
+          <span class="text-sky-900" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"
+            x-text="date">
+            {{ .Article.UpdatedStr }}
+          </span>
+        </p>
+        {{ end }}
+        <p>
+          Summary:
+          <span class="text-sky-900">{{ .Article.Summary }}</span>
+        </p>
+        <p>
+          Keywords:
+          <span class="text-sky-900">{{ .Article.Keywords }}</span>
+        </p>
+        <p>
+          Slug:
+          <span class="text-sky-900">{{ .Article.Slug }}</span>
+        </p>
+        <p>Categories:
+          {{ range .Categories }}
+          <span class="text-sky-900">{{ .Category }} </span>
+          {{ end }}
+        </p>
+        <p>Content:</p>
         {{ .Article.HTML }}
       </div>
     </div>
