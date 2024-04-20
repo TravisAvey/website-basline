@@ -14,6 +14,15 @@
           {{ .Article.PostedStr }}
         </span>
       </p>
+      {{ if .Article.UpdatedStr }}
+      <p class="mb-1 text-gray-300 font-extralight">
+        Updated:
+        <span class="text-orange-300 font-normal" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"
+          x-text="date">
+          {{ .Article.UpdatedStr }}
+        </span>
+      </p>
+      {{ end }}
       <p>{{ .Article.Summary }}</p>
       <div class="card-actions justify-start">
         <p class="text-gray-300 font-extralight">Categories:</p>

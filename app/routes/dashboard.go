@@ -41,7 +41,9 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 
 	for i := range posts {
 		posts[i].Article.PostedStr = parseDate(posts[i].Article.DatePosted.Time)
-		posts[i].Article.UpdatedStr = parseDate(posts[i].Article.DateUpdated.Time)
+		if posts[i].Article.DateUpdated.Valid {
+			posts[i].Article.UpdatedStr = parseDate(posts[i].Article.DateUpdated.Time)
+		}
 	}
 	numPosts := len(posts)
 
@@ -94,6 +96,9 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
+	if post.Article.DateUpdated.Valid {
+		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
+	}
 
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/post.html")
 	err = t.Execute(w, post)
