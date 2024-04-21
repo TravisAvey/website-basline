@@ -75,7 +75,7 @@ values
   ('Hello World','2023-11-23',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>Hello World</h3>','Hello World','hello world','hello-world'),
   ('The Second Post','2023-12-07',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A Post</h3>','This is a post','test','second-post'),
   ('The Post','2023-12-14',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>The Post</h3>','The third post','test','more-tests'),
-  ('Lets Have another Post','2024-01-14',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A simple test, hmmm</h3>','May the Forth test - test','test','another-test');
+  ('Lets Have another Post','2024-01-14','2024-02-24',E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A simple test, hmmm</h3>','May the Forth test - test','test','another-test');
 
 insert into categories(category) values
   ('general'),
@@ -131,8 +131,8 @@ insert into gallery_categories(image_id, category_id) values
 
 
 insert into messages(type, header, message, sent, read) values
-  ('alert', 'New Subscriber', 'Jim has joined! jim@dunder.com', '2020-05-31', FALSE),
-  ('alert', 'New Message', 'A test message from the database', '2020-01-18', FALSE),
-  ('alert', 'New Subscriber', 'postgresql has joined! email: psql@bash', '2020-08-24', FALSE),
-  ('contact', 'Jim Halpert;j.halpert@dunder.com', 'This is Jim Halpert.', '2020-03-18', FALSE),
-  ('contact', 'Dwight Schrute;d.schrute@dudner.com', 'Bears eat beats', '2020-05-14', FALSE);
+  ('alert', 'New Subscriber', 'Jim has joined! jim@dunder.com', '2023-05-31', FALSE),
+  ('alert', 'New Message', 'A test message from the database', '2024-01-18', FALSE),
+  ('alert', 'New Subscriber', 'postgresql has joined! email: psql@bash', '2023-08-24', FALSE),
+  ('contact', 'Jim Halpert;j.halpert@dunder.com', 'This is Jim Halpert.', '2024-03-18', FALSE),
+  ('contact', 'Dwight Schrute;d.schrute@dudner.com', 'Bears eat beats', '2023-05-14', FALSE);
