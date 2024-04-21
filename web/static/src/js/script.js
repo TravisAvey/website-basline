@@ -13,3 +13,11 @@ function removeElement(id) {
   const ele = "post-" + id
   document.getElementById(ele).remove()
 }
+
+window.onload = function () {
+  document.body.addEventListener("htmx:confirm", function(e) {
+    console.log("confirm button pressed")
+    console.log(e.detail.path)
+  })
+  
+}
