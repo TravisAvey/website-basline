@@ -40,8 +40,8 @@
             <p class="py-4">Are you sure? This cannot be undone and this post will be gone forever</p>
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Article.ID }})">Cancel</button>
-              <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error" onClick="htmx.trigger(this, '')"
-                @click="removeElement({{ .Article.ID }})">Delete</button>
+              <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error"
+                hx-on:click="removeElement({{ .Article.ID }})">Delete</button>
             </div>
           </div>
         </dialog>
