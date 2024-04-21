@@ -1,10 +1,23 @@
 
 function showDeleteDialog(id) {
-  ele = "modal_" + id
+  const ele = "modal_" + id
   document.getElementById(ele).showModal()
 }
 
 function closeDeleteDialog(id) {
-  ele = "modal_" + id
+  const ele = "modal_" + id
   document.getElementById(ele).close()
+}
+
+function removeElement(id) {
+  const ele = "post-" + id
+  document.getElementById(ele).remove()
+}
+
+window.onload = function () {
+  document.body.addEventListener("htmx:confirm", function(e) {
+    //console.log("confirm button pressed")
+    //console.log(e.detail.path)
+  })
+  
 }
