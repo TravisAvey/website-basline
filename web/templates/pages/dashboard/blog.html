@@ -1,7 +1,7 @@
 <h2 class="m-4 text-xl text-gray-800">Number of Posts: {{ .NumPosts }}</h2>
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Posts }}
-  <div class="card w-96 bg-gray-800 shadow-xl">
+  <div id="post-{{ .Article.ID }}" class="card w-96 bg-gray-800 shadow-xl">
     <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
@@ -40,7 +40,8 @@
             <p class="py-4">Are you sure? This cannot be undone and this post will be gone forever</p>
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Article.ID }})">Cancel</button>
-              <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error">Delete</button>
+              <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error"
+                onclick="removeElement({{ .Article.ID }})">Delete</button>
             </div>
           </div>
         </dialog>
