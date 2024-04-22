@@ -51,6 +51,7 @@ create table messages (
   type varchar(10) not null,
   header varchar(255) not null,
   message text not null,
+  email text,
   sent date not null,
   read boolean not null,
   primary key (id)
@@ -130,9 +131,9 @@ insert into gallery_categories(image_id, category_id) values
   (1, (select id from photo_categories where id=2));
 
 
-insert into messages(type, header, message, sent, read) values
-  ('alert', 'New Subscriber', 'Jim has joined! jim@dunder.com', '2023-05-31', FALSE),
-  ('alert', 'New Message', 'A test message from the database', '2024-01-18', FALSE),
-  ('alert', 'New Subscriber', 'postgresql has joined! email: psql@bash', '2023-08-24', FALSE),
-  ('contact', 'Jim Halpert;j.halpert@dunder.com', 'This is Jim Halpert.', '2024-03-18', FALSE),
-  ('contact', 'Dwight Schrute;d.schrute@dudner.com', 'Bears eat beats', '2023-05-14', FALSE);
+insert into messages(type, header, message, email, sent, read) values
+  ('alert', 'New Subscriber', 'Jim has joined!', 'jim@dunder.com', '2023-05-31', FALSE),
+  ('alert', 'New Message', 'A test message from the database', '', '2024-01-18', FALSE),
+  ('subscriber', 'New Subscriber', 'postgresql has joined!', 'psql@bash', '2023-08-24', FALSE),
+  ('message', 'New Message', 'This is Jim Halpert.', 'jim@dunder.com', '2024-03-18', FALSE),
+  ('message', 'New Message', 'Bears eat beats', 'dwight@dunder.com', '2023-05-14', FALSE);

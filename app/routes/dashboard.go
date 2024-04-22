@@ -13,15 +13,22 @@ import (
 )
 
 func dashboard(w http.ResponseWriter, _ *http.Request) {
+	count, err := database.GetMessageCount(true)
+	if err != nil {
+		// TODO: log error
+		w.Write([]byte(err.Error()))
+	}
 	data := struct {
-		Title string
+		Title    string
+		MsgCount uint64
 	}{
-		Title: "Dashboard Page",
+		Title:    "Dashboard Page",
+		MsgCount: count,
 	}
 
 	files := []string{"web/templates/base.html", "web/templates/pages/dashboard.html"}
 	t, _ := template.ParseFiles(files...)
-	err := t.ExecuteTemplate(w, "base", data)
+	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
@@ -130,5 +137,111 @@ func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		sendResponseMsg("Failed to execute template", Error, w)
+	}
+}
+
+func getMessages(w http.ResponseWriter, r *http.Request) {
+	msgs, err := database.GetAllMessages()
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+	}
+
+	// send partial
+	println(msgs[0].Message)
+}
+
+func getMessage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+	}
+
+	var message database.Message
+	message, err = database.GetMessage(id)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+
+	}
+
+	// send partial
+	println(message.Message)
+}
+
+func messageRead(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+	}
+
+	err = database.MessageRead(id)
+	if err != nil {
+
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+	}
+}
+
+func messageDelete(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
+		return
+	}
+
+	err = database.DeleteMessage(id)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: log Error
 	}
 }

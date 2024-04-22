@@ -38,6 +38,10 @@ func Init() {
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
 	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
 	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
+	router.HandleFunc("/dashboard/messages", getMessages).Methods("GET")
+	router.HandleFunc("/dashboard/messages/{id}", getMessage).Methods("GET")
+	router.HandleFunc("/dashboard/message/{id}", messageRead).Methods("PUT")
+	router.HandleFunc("/dashboard/message/{id}", messageRead).Methods("DELETE")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
