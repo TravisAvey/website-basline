@@ -80,7 +80,8 @@ type Message struct {
 	Type    string      `json:"type"`
 	Header  string      `json:"header"`
 	Message string      `json:"message"`
+	Email   string      `json:"email"`
 	Sent    pq.NullTime `json:"sentDate"`
 	Read    bool        `json:"read"`
-	Id      int         `json:"id"`
+	Id      uint64      `json:"id"`
 }

@@ -13,15 +13,22 @@ import (
 )
 
 func dashboard(w http.ResponseWriter, _ *http.Request) {
+	count, err := database.GetMessageCount(true)
+	if err != nil {
+		// TODO: log error
+		w.Write([]byte(err.Error()))
+	}
 	data := struct {
-		Title string
+		Title    string
+		MsgCount uint64
 	}{
-		Title: "Dashboard Page",
+		Title:    "Dashboard Page",
+		MsgCount: count,
 	}
 
 	files := []string{"web/templates/base.html", "web/templates/pages/dashboard.html"}
 	t, _ := template.ParseFiles(files...)
-	err := t.ExecuteTemplate(w, "base", data)
+	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
@@ -59,6 +66,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 	err = t.Execute(w, data)
 	if err != nil {
 		w.Write([]byte(err.Error()))
+		// TODO: log error
 		sendResponseMsg("Failed to execute template", Error, w)
 	}
 }
@@ -67,13 +75,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 func getPostByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
+		sendResponseMsg("Failed parse the ID for the blog post", Error, w)
 		// TODO: log Error
 		return
 	}
@@ -81,13 +83,7 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	var post database.Post
 	post, err = database.GetPostByID(id)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
+		sendResponseMsg("Failed to get the blog post", Error, w)
 		// TODO: log error
 		return
 	}
@@ -112,6 +108,7 @@ func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	imgs, err := database.GetAllImages()
 	if err != nil {
 		sendResponseMsg("Failed to get images", Error, w)
+		// TODO: log error
 		return
 	}
 
@@ -128,7 +125,71 @@ func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/gallery.html")
 	err = t.Execute(w, data)
 	if err != nil {
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 		sendResponseMsg("Failed to execute template", Error, w)
+	}
+}
+
+func getMessages(w http.ResponseWriter, r *http.Request) {
+	msgs, err := database.GetAllMessages()
+	if err != nil {
+		sendResponseMsg("Couldn't retrieve the messages", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	// send partial
+	println(msgs[0].Message)
+}
+
+func getMessage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		sendResponseMsg("Couldn't parse the id of the message", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	var message database.Message
+	message, err = database.GetMessage(id)
+	if err != nil {
+		sendResponseMsg("Failed to get Message", Error, w)
+		// TODO: log Error
+		return
+
+	}
+
+	// send partial
+	println(message.Message)
+}
+
+func messageRead(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		sendResponseMsg("Couldn't parse the ID for the message", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	err = database.MessageRead(id)
+	if err != nil {
+		sendResponseMsg("Failed to mark the message as read", Error, w)
+		// TODO: log Error
+	}
+}
+
+func messageDelete(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		sendResponseMsg("Couldn't parse the ID for the message", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	err = database.DeleteMessage(id)
+	if err != nil {
+		sendResponseMsg("Couldn't Delete the message", Error, w)
+		// TODO: log Error
 	}
 }
