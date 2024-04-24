@@ -82,6 +82,7 @@ type Message struct {
 	Message string      `json:"message"`
 	Email   string      `json:"email"`
 	Sent    pq.NullTime `json:"sentDate"`
+	DateStr string      `json:"dateStr"`
 	Read    bool        `json:"read"`
 	ID      uint64      `json:"id"`
 }

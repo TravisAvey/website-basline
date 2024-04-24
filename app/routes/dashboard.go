@@ -138,6 +138,10 @@ func getMessages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for i := range msgs {
+		msgs[i].DateStr = parseDate(msgs[i].Sent.Time)
+	}
+
 	data := struct {
 		Messages []database.Message
 	}{

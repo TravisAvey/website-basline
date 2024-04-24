@@ -40,7 +40,28 @@
       </td>
       <td class="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
         <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-        <a hx-get="/dashboard/message/{{ .ID }}" hx-target="#dashboard" class="btn btn-success">View</a>
+
+        <button class="btn btn-success" onclick="showMessageModal({{ .ID }})">View</button>
+        <dialog id="msg-modal-{{ .ID }}" class="modal" role="dialog">
+          <div class="modal-box text-gray-300">
+            <div>
+              <h3 class="font-bold text-lg">{{ .Header }}</h3>
+              <p class="py-4"><span class="text-cyan-300">Type</span> {{ .Type }}</p>
+              <p class="py-4">{{ .Message }}</p>
+              <p class="py-4"><span class="text-cyan-300">From</span> {{ .Email }}</p>
+              <p class="py-4"><span class="text-cyan-300">Sent</span>
+                <span x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
+                  {{ .DateStr }}
+                </span>
+              </p>
+            </div>
+            <div class="modal-action">
+              <button class="btn btn-info" onclick="closeMessageModal({{ .ID }})">OK</button>
+              <button hx-put="/dashboard/message/{{ .ID }}" class="btn btn-accent">Mark Read</button>
+            </div>
+          </div>
+        </dialog>
+
         <button class="btn btn-error" onclick="showDeleteDialog({{ .ID }})">Delete</button>
         <dialog id="modal_{{ .ID }}" class="modal" role="dialog">
           <div class="modal-box text-gray-300">
