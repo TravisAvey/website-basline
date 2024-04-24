@@ -44,7 +44,7 @@
         <button class="btn btn-success" onclick="showMessageModal({{ .ID }})">View</button>
         <dialog id="msg-modal-{{ .ID }}" class="modal" role="dialog">
           <div class="modal-box text-gray-300">
-            <div>
+            <div class="text-left m-2">
               <h3 class="font-bold text-lg">{{ .Header }}</h3>
               <p class="py-4"><span class="text-cyan-300">Type</span> {{ .Type }}</p>
               <p class="py-4">{{ .Message }}</p>
