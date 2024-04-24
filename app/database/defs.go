@@ -83,5 +83,5 @@ type Message struct {
 	Email   string      `json:"email"`
 	Sent    pq.NullTime `json:"sentDate"`
 	Read    bool        `json:"read"`
-	Id      uint64      `json:"id"`
+	ID      uint64      `json:"id"`
 }

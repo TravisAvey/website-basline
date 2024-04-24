@@ -37,7 +37,7 @@ func GetAllMessages() ([]Message, error) {
 
 	for rows.Next() {
 		var msg Message
-		err = rows.Scan(&msg.Type, &msg.Header, &msg.Message, &msg.Email, &msg.Sent, &msg.Read, &msg.Id)
+		err = rows.Scan(&msg.Type, &msg.Header, &msg.Message, &msg.Email, &msg.Sent, &msg.Read, &msg.ID)
 		if err != nil {
 			return []Message{}, err
 		}
@@ -55,7 +55,7 @@ func GetMessage(id uint64) (Message, error) {
 	}
 
 	var msg Message
-	msg.Id = id
+	msg.ID = id
 
 	for rows.Next() {
 		err = rows.Scan(&msg.Type, &msg.Header, &msg.Message, &msg.Email, &msg.Sent, &msg.Read)

@@ -126,7 +126,6 @@ func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	err = t.Execute(w, data)
 	if err != nil {
 		// TODO: log error
-		w.Write([]byte(err.Error()))
 		sendResponseMsg("Failed to execute template", Error, w)
 	}
 }
@@ -139,8 +138,18 @@ func getMessages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// send partial
-	println(msgs[0].Message)
+	data := struct {
+		Messages []database.Message
+	}{
+		Messages: msgs,
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/messages.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		// TODO: log error
+		sendResponseMsg("Failed to execute template", Error, w)
+	}
 }
 
 func getMessage(w http.ResponseWriter, r *http.Request) {

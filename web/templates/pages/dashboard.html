@@ -9,7 +9,7 @@
     <a href="/dashboard" class="btn btn-ghost text-xl">{{ .Title }}</a>
   </div>
   <div class="justify-self-end px-2">
-    <button class="btn btn-ghost btn-circle">
+    <button hx-get="/dashboard/messages" hx-target="#dashboard" class="btn btn-ghost btn-circle">
       <div class="indicator">
         <i class="h-5 w-5 fa-solid fa-bell"></i>
         <span class="badge badge-xs badge-primary indicator-item">{{ .MsgCount }}</span>
