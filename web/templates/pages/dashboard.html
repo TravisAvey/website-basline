@@ -12,7 +12,8 @@
     <button hx-get="/dashboard/messages" hx-target="#dashboard" class="btn btn-ghost btn-circle">
       <div class="indicator">
         <i class="h-5 w-5 fa-solid fa-bell"></i>
-        <span class="badge badge-xs badge-primary indicator-item">{{ .MsgCount }}</span>
+        <span hx-get="/dashboard/messages/unread" hx-target="this" hx-trigger="load, every 5s"
+          class="badge badge-xs badge-primary indicator-item">0</span>
       </div>
     </button>
   </div>

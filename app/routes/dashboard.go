@@ -156,6 +156,17 @@ func getMessages(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func getMessageCount(w http.ResponseWriter, _ *http.Request) {
+	count, err := database.GetMessageCount(true)
+	if err != nil {
+		sendResponseMsg("Couldn't retrieve the unread message count", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	w.Write([]byte(strconv.FormatUint(count, 10)))
+}
+
 func getMessage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
