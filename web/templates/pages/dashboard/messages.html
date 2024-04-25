@@ -57,7 +57,8 @@
             </div>
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeMessageModal({{ .ID }})">OK</button>
-              <button hx-put="/dashboard/message/{{ .ID }}" class="btn btn-accent">Mark Read</button>
+              <button hx-put="/dashboard/message/{{ .ID }}" hx-on:click="closeMessageModal({{ .ID }})"
+                class="btn btn-accent">Mark Read</button>
             </div>
           </div>
         </dialog>
@@ -70,7 +71,7 @@
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .ID }})">Cancel</button>
               <button hx-delete="/dashboard/message/{{ .ID }}" class="btn btn-error"
-                hx-on:click="removeElement(message-{{ .ID }})">Delete</button>
+                hx-on:click="removeMsgElement({{ .ID }})">Delete</button>
             </div>
           </div>
         </dialog>

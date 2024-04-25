@@ -9,7 +9,13 @@ function closeDeleteDialog(id) {
   document.getElementById(ele).close()
 }
 
-function removeElement(ele) {
+function removePostElement(id) {
+  const ele = "post-" + id
+  document.getElementById(ele).remove()
+}
+
+function removeMsgElement(id) {
+  const ele = "message-" + id
   document.getElementById(ele).remove()
 }
 
