@@ -37,11 +37,13 @@ func Init() {
 	router.HandleFunc("/dashboard", dashboard)
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
 	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
+	router.HandleFunc("/dashboard/blog/count", dashboardPostCount).Methods("GET")
 	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
 	router.HandleFunc("/dashboard/messages", getMessages).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", getMessage).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", messageRead).Methods("PUT")
 	router.HandleFunc("/dashboard/message/{id}", messageDelete).Methods("DELETE")
+	router.HandleFunc("/dashboard/messages/unread", getMessageCount).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
