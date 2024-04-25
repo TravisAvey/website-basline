@@ -41,7 +41,7 @@
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Article.ID }})">Cancel</button>
               <button hx-delete="/blog/posts/{{ .Article.ID }}" class="btn btn-error"
-                hx-on:click="removeElement({{ .Article.ID }})">Delete</button>
+                hx-on:click="removePostElement({{ .Article.ID }})">Delete</button>
             </div>
           </div>
         </dialog>

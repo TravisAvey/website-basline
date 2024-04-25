@@ -1,0 +1,82 @@
+<table class="border-collapse w-full">
+  <thead>
+    <tr>
+      <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+        Type
+      </th>
+      <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+        Subject
+      </th>
+      <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+        Status
+      </th>
+      <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range .Messages }}
+    <tr id="message-{{ .ID }}"
+      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+      <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+        <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
+          Type
+        </span>
+        {{ .Type }}
+      </td>
+      <td
+        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
+        <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Subject</span>
+        {{ .Header }}
+      </td>
+      <td class="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
+        <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Status</span>
+        {{ if .Read }}
+        <span class="rounded bg-orange-400 py-1 px-3 text-xs font-bold">Read</span>
+        {{ else }}
+        <span class="rounded bg-blue-400 py-1 px-3 text-xs font-bold">Not Read</span>
+        {{ end }}
+      </td>
+      <td class="w-full lg:w-auto p-3 text-gray-800 border border-b text-center block lg:table-cell relative lg:static">
+        <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
+
+        <button class="btn btn-success" onclick="showMessageModal({{ .ID }})">View</button>
+        <dialog id="msg-modal-{{ .ID }}" class="modal" role="dialog">
+          <div class="modal-box text-gray-300">
+            <div class="text-left m-2">
+              <h3 class="font-bold text-lg">{{ .Header }}</h3>
+              <p class="py-4"><span class="text-cyan-300">Type</span> {{ .Type }}</p>
+              <p class="py-4">{{ .Message }}</p>
+              <p class="py-4"><span class="text-cyan-300">From</span> {{ .Email }}</p>
+              <p class="py-4"><span class="text-cyan-300">Sent</span>
+                <span x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }" x-text="date">
+                  {{ .DateStr }}
+                </span>
+              </p>
+            </div>
+            <div class="modal-action">
+              <button class="btn btn-info" onclick="closeMessageModal({{ .ID }})">OK</button>
+              <button hx-put="/dashboard/message/{{ .ID }}" hx-on:click="closeMessageModal({{ .ID }})"
+                class="btn btn-accent">Mark Read</button>
+            </div>
+          </div>
+        </dialog>
+
+        <button class="btn btn-error" onclick="showDeleteDialog({{ .ID }})">Delete</button>
+        <dialog id="modal_{{ .ID }}" class="modal" role="dialog">
+          <div class="modal-box text-gray-300">
+            <h3 class="font-bold text-lg">Delete This Message?</h3>
+            <p class="py-4">Are you sure? This cannot be undone and this message will be gone forever</p>
+            <div class="modal-action">
+              <button class="btn btn-info" onclick="closeDeleteDialog({{ .ID }})">Cancel</button>
+              <button hx-delete="/dashboard/message/{{ .ID }}" class="btn btn-error"
+                hx-on:click="removeMsgElement({{ .ID }})">Delete</button>
+            </div>
+          </div>
+        </dialog>
+      </td>
+      {{ end }}
+    </tr>
+  </tbody>
+</table>
