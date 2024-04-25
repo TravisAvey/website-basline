@@ -8,9 +8,9 @@ import (
 	"github.com/lib/pq"
 )
 
-func GetPostCount() (int, error) {
+func GetPostCount() (uint64, error) {
 	statement := `select count(*) from posts;`
-	var count int
+	var count uint64
 	row, err := db.Query(statement)
 	if err != nil {
 		return count, err

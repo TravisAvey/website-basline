@@ -71,6 +71,17 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+func dashboardPostCount(w http.ResponseWriter, _ *http.Request) {
+	count, err := database.GetPostCount()
+	if err != nil {
+		sendResponseMsg("Couldn't retrieve the post count", Error, w)
+		// TODO: log Error
+		return
+	}
+
+	w.Write([]byte(strconv.FormatUint(count, 10)))
+}
+
 // get a single post -- only use from Dashboard.
 func getPostByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)

@@ -1,4 +1,6 @@
-<h2 class="m-4 text-xl text-gray-800">Number of Posts: {{ .NumPosts }}</h2>
+<h2 class="m-4 text-xl text-gray-800">Number of Posts:
+  <span hx-get="/dashboard/blog/count" hx-target="this" hx-trigger="load, every 5s"></span>
+</h2>
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Posts }}
   <div id="post-{{ .Article.ID }}" class="card w-96 bg-gray-800 shadow-xl">
