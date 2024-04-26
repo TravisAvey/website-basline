@@ -12,7 +12,7 @@ import (
 var (
 	SESSION_NAME string = "auth_session"
 	AUTH_KEY     string = "authenticated"
-	USER_ID      string = "user_id"
+	USER_ID      string = "user"
 	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
 
@@ -67,6 +67,27 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 1. store in session user logged in
+	session, err := store.Get(r, SESSION_NAME)
+	if err != nil {
+		// TODO: log error
+		sendResponseMsg("Something went wrong, try again.", Error, w)
+		return
+	}
+	session.Options = &sessions.Options{
+		MaxAge:   60 * 60 * 12,
+		HttpOnly: true,
+		Path:     "/dashboard",
+	}
+	session.Values[AUTH_KEY] = true
+	session.Values[USER_ID] = user.User.ID
+	err = session.Store().Save(r, w, session)
+	if err != nil {
+		// TODO: log error
+		sendResponseMsg("Something went wrong, try again.", Error, w)
+		return
+	}
+
 	// 2. send user to dashboard?
-	fmt.Println(user.User)
+	//
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
