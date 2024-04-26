@@ -2,7 +2,9 @@ package auth
 
 import (
 	"context"
+	"crypto/rand"
 	"fmt"
+	"math/big"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -11,7 +13,9 @@ import (
 
 var supa *supabase.Client
 
-func getSecrets() {
+const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func setup() {
 	err := godotenv.Load("config/.env")
 	if err != nil {
 		// TODO: log error
@@ -24,8 +28,21 @@ func getSecrets() {
 	supa = supabase.CreateClient(supaUrl, supaKey, true)
 }
 
-func Setup() {
-	getSecrets()
+func GetSessionKey(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		v, err := rand.Int(rand.Reader, big.NewInt(32))
+		if err != nil {
+			fmt.Println(err.Error())
+			return ""
+		}
+		b[i] = letters[v.Int64()]
+	}
+	return string(b)
+}
+
+func Init() {
+	setup()
 }
 
 func SignIn(email, password string) (*supabase.AuthenticatedDetails, error) {
