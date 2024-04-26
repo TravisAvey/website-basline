@@ -60,8 +60,13 @@ func authMiddleware(HandlerFunc http.HandlerFunc) http.HandlerFunc {
 func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	user, err := auth.SignIn(r.FormValue("email"), r.FormValue("password"))
 	if err != nil {
+		// send msg that incorrect user/password
+		sendResponseMsg("Incorrect username and/or password", Error, w)
+		// TODO: log attempt
 		fmt.Println(err.Error())
 		return
 	}
+	// 1. store in session user logged in
+	// 2. send user to dashboard?
 	fmt.Println(user.User)
 }
