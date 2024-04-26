@@ -13,7 +13,7 @@
 
   <article class="bg-gray-800 rounded-s text-gray-200 lg:p-36 md:p-52 mx-auto p-8 w-full lg:w-5/12">
     <h1 class="text-2xl font-semibold mb-4">Login</h1>
-    <form action="#" method="POST">
+    <form hx-replace-url="/dashboard" hx-post="/login" hx-target="#content">
 
       <div class="mb-4">
         <label for="email" class="block">Email</label>
@@ -38,7 +38,7 @@
         <a href="#" class="hover:underline">Forgot Password?</a>
       </div>
 
-      <button type="submit" hx-post="/login" hx-target="#error"
+      <button type="submit"
         class="bg-orange-400 hover:bg-orange-300 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
     </form>
 

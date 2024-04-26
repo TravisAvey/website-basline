@@ -89,5 +89,6 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 
 	// 2. send user to dashboard?
 	//
+	w.Header().Add("Hx-Replace-Url", "/dashboard")
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
