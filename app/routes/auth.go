@@ -16,10 +16,6 @@ var (
 	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
 
-type Message struct {
-	Content string `json:"content"`
-}
-
 func loginPage(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
 		Title string
