@@ -32,6 +32,7 @@ func dashboard(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
+	go sendSSEMessage("<h1>Dashboard</h1>")
 }
 
 // not sure what need endpoints here are needed..
