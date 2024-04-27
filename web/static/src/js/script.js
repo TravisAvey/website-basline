@@ -34,5 +34,16 @@ window.onload = function () {
     //console.log("confirm button pressed")
     //console.log(e.detail.path)
   })
-  
+  document.body.addEventListener("htmx:afterRequest", function (evt) {
+
+    if (evt.detail.xhr.status == 401) {
+      const ele = document.getElementById("response")
+      ele.attributes[0].textContent = "{ open: true }"
+      const msgEle = document.getElementById("message")
+      res = JSON.parse(evt.detail.xhr.response)
+      msgEle.innerHTML = res.content
+
+    }
+  })  
 }
+

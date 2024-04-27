@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -15,6 +16,10 @@ var (
 	USER_ID      string = "user"
 	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
+
+type Message struct {
+	Content string `json:"content"`
+}
 
 func loginPage(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
@@ -61,7 +66,11 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	user, err := auth.SignIn(r.FormValue("email"), r.FormValue("password"))
 	if err != nil {
 		// send msg that incorrect user/password
-		sendResponseMsg("Incorrect username and/or password", Error, w)
+		w.WriteHeader(http.StatusUnauthorized)
+		msg := Message{
+			Content: "Incorrect username and/or password",
+		}
+		json.NewEncoder(w).Encode(msg)
 		// TODO: log attempt
 		fmt.Println(err.Error())
 		return
@@ -70,7 +79,7 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, SESSION_NAME)
 	if err != nil {
 		// TODO: log error
-		sendResponseMsg("Something went wrong, try again.", Error, w)
+		// sendResponseMsg("Something went wrong, try again.", Error, w)
 		return
 	}
 	session.Options = &sessions.Options{
@@ -83,7 +92,7 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	err = session.Store().Save(r, w, session)
 	if err != nil {
 		// TODO: log error
-		sendResponseMsg("Something went wrong, try again.", Error, w)
+		// sendResponseMsg("Something went wrong, try again.", Error, w)
 		return
 	}
 
