@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -67,10 +66,6 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// send msg that incorrect user/password
 		w.WriteHeader(http.StatusUnauthorized)
-		msg := Message{
-			Content: "Incorrect username and/or password",
-		}
-		json.NewEncoder(w).Encode(msg)
 		// TODO: log attempt
 		fmt.Println(err.Error())
 		return
@@ -79,7 +74,8 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, SESSION_NAME)
 	if err != nil {
 		// TODO: log error
-		// sendResponseMsg("Something went wrong, try again.", Error, w)
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Println(err.Error())
 		return
 	}
 	session.Options = &sessions.Options{
@@ -92,12 +88,13 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	err = session.Store().Save(r, w, session)
 	if err != nil {
 		// TODO: log error
-		// sendResponseMsg("Something went wrong, try again.", Error, w)
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Println(err.Error())
 		return
 	}
 
 	// 2. send user to dashboard?
 	//
-	w.Header().Add("Hx-Replace-Url", "/dashboard")
+	w.Header().Add("Hx-Push-Url", "/dashboard")
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
