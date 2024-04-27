@@ -34,5 +34,5 @@ window.onload = function () {
     //console.log("confirm button pressed")
     //console.log(e.detail.path)
   })
-  
 }
+
