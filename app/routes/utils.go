@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -91,6 +92,40 @@ func parseImageData(r *http.Request) (database.Image, error) {
 	}
 
 	return image, nil
+}
+
+func getResponseMsg(msg string, res ResponseType) string {
+	var buf bytes.Buffer
+	data := struct {
+		Message string
+	}{
+		Message: msg,
+	}
+
+	var t *template.Template
+	var err error
+
+	switch res {
+	case Warn:
+		t, err = template.ParseFiles("web/templates/messages/warn.html")
+	case Info:
+		t, err = template.ParseFiles("web/templates/messages/info.html")
+	case Success:
+		t, err = template.ParseFiles("web/templates/messages/success.html")
+	case Error:
+		t, err = template.ParseFiles("web/templates/messages/error.html")
+	}
+
+	if err != nil {
+		return ""
+	}
+
+	err = t.Execute(&buf, data)
+	if err != nil {
+		return ""
+	}
+
+	return buf.String()
 }
 
 func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error {
