@@ -52,6 +52,8 @@ func sseEndpoint(w http.ResponseWriter, r *http.Request) {
 func formatSSEMessage(msg string) string {
 	var message string
 	message = "event: message\n"
+	// might need a loop here... and do data: %s\n for each line
+	// then a single extra \n at the end
 	message += fmt.Sprintf("data: %s\n\n", msg)
 
 	return message
