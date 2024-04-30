@@ -8,7 +8,10 @@ import (
 	"strings"
 )
 
-var msgChan chan string
+var (
+	msgChan   chan string
+	loginChan chan string
+)
 
 func sseEndpoint(w http.ResponseWriter, r *http.Request) {
 	// get some id
@@ -46,6 +49,42 @@ func sseEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func sseLogin(w http.ResponseWriter, r *http.Request) {
+	// get some id
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	loginChan = make(chan string)
+
+	_, cancel := context.WithCancel(r.Context())
+	defer cancel()
+
+	defer func() {
+		if loginChan != nil {
+			close(loginChan)
+			loginChan = nil
+		}
+	}()
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		return
+	}
+
+	for {
+		select {
+		case message := <-loginChan:
+			fmt.Fprintf(w, "%s", message)
+			flusher.Flush()
+		case <-r.Context().Done():
+			return
+		}
+	}
+}
+
 func formatSSEMessage(msg string) string {
 	var message string
 	message = "event: message\n"
@@ -63,5 +102,12 @@ func sendSSEMessage(msg string) {
 	if msgChan != nil {
 		message := formatSSEMessage(msg)
 		msgChan <- message
+	}
+}
+
+func sendLoginMessage(msg string) {
+	if loginChan != nil {
+		message := formatSSEMessage(msg)
+		loginChan <- message
 	}
 }

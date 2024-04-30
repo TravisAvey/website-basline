@@ -46,6 +46,7 @@ func Init() {
 	router.HandleFunc("/dashboard/message/{id}", messageDelete).Methods("DELETE")
 	router.HandleFunc("/dashboard/messages/unread", getMessageCount).Methods("GET")
 	router.HandleFunc("/sse-messages", sseEndpoint)
+	router.HandleFunc("/sse-login", sseLogin)
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
