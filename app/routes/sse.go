@@ -9,28 +9,25 @@ import (
 )
 
 var (
-	msgChan   chan string
-	loginChan chan string
+	msgChan   = make(map[chan string]struct{})
+	loginChan = make(map[chan string]struct{})
 )
 
 func sseEndpoint(w http.ResponseWriter, r *http.Request) {
-	// get some id
-
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	msgChan = make(chan string)
+	evtChan := make(chan string)
+	msgChan[evtChan] = struct{}{}
 
 	_, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
 	defer func() {
-		if msgChan != nil {
-			close(msgChan)
-			msgChan = nil
-		}
+		delete(msgChan, evtChan)
+		close(evtChan)
 	}()
 
 	flusher, ok := w.(http.Flusher)
@@ -40,7 +37,7 @@ func sseEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		select {
-		case message := <-msgChan:
+		case message := <-evtChan:
 			fmt.Fprintf(w, "%s", message)
 			flusher.Flush()
 		case <-r.Context().Done():
@@ -50,23 +47,20 @@ func sseEndpoint(w http.ResponseWriter, r *http.Request) {
 }
 
 func sseLogin(w http.ResponseWriter, r *http.Request) {
-	// get some id
-
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	loginChan = make(chan string)
+	evtChan := make(chan string)
+	loginChan[evtChan] = struct{}{}
 
 	_, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
 	defer func() {
-		if loginChan != nil {
-			close(loginChan)
-			loginChan = nil
-		}
+		delete(loginChan, evtChan)
+		close(evtChan)
 	}()
 
 	flusher, ok := w.(http.Flusher)
@@ -76,7 +70,7 @@ func sseLogin(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		select {
-		case message := <-loginChan:
+		case message := <-evtChan:
 			fmt.Fprintf(w, "%s", message)
 			flusher.Flush()
 		case <-r.Context().Done():
@@ -101,13 +95,17 @@ func formatSSEMessage(msg string) string {
 func sendSSEMessage(msg string) {
 	if msgChan != nil {
 		message := formatSSEMessage(msg)
-		msgChan <- message
+		for ch := range msgChan {
+			ch <- message
+		}
 	}
 }
 
 func sendLoginMessage(msg string) {
 	if loginChan != nil {
 		message := formatSSEMessage(msg)
-		loginChan <- message
+		for ch := range loginChan {
+			ch <- message
+		}
 	}
 }
