@@ -63,7 +63,7 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		// send msg that incorrect user/password
 		w.WriteHeader(http.StatusUnauthorized)
 		msg := getResponseMsg("incorrect username and/or password", Error)
-		sendSSEMessage(msg)
+		sendLoginMessage(msg)
 		// TODO: log attempt
 		fmt.Println(err.Error())
 		return
