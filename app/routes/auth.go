@@ -10,10 +10,13 @@ import (
 )
 
 var (
-	SESSION_NAME string = "auth_session"
-	AUTH_KEY     string = "authenticated"
-	USER         string = "user"
-	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
+	SESSION_NAME  string = "auth_session"
+	AUTH_KEY      string = "authenticated"
+	USER_ID       string = "user_id"
+	AUTH_TOKEN    string = "auth_token"
+	REFRESH_TOKEN string = "refresh_token"
+	EXPIRES_IN    string = "expires_in"
+	store                = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
 
 func loginPage(w http.ResponseWriter, _ *http.Request) {
@@ -43,7 +46,7 @@ func authMiddleware(HandlerFunc http.HandlerFunc) http.HandlerFunc {
 			}
 			sendErrorTemplate(msg, w)
 		}
-		if session.Values[AUTH_KEY] == nil || session.Values[USER] == nil {
+		if session.Values[AUTH_KEY] == nil || session.Values[USER_ID] == nil {
 			// user not auth...
 			msg := errMsg{
 				ErrorCode: 404,
@@ -81,15 +84,14 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Path:     "/dashboard",
 	}
-	userAuth := auth.User{
-		AccessToken:  user.AccessToken,
-		TokenType:    user.TokenType,
-		RefreshToken: user.RefreshToken,
-		ExpiresIn:    user.ExpiresIn,
-	}
 
+	fmt.Println("user.AccessToken...", user.AccessToken)
 	session.Values[AUTH_KEY] = true
-	session.Values[USER] = userAuth
+	session.Values[USER_ID] = user.User.ID
+	session.Values[AUTH_TOKEN] = user.AccessToken
+	session.Values[REFRESH_TOKEN] = user.RefreshToken
+	session.Values[EXPIRES_IN] = user.ExpiresIn
+	fmt.Println("Auth Token...", session.Values[AUTH_TOKEN])
 
 	err = session.Save(r, w)
 	if err != nil {
@@ -116,18 +118,13 @@ func logOut(w http.ResponseWriter, r *http.Request) {
 		sendErrorTemplate(msg, w)
 	}
 
-	val := session.Values[USER]
-	user := &auth.User{}
-	if user, ok := val.(*auth.User); !ok {
-		fmt.Println("Error getting user", user)
-		return
-		// Handle the case that it's not an expected type
-	}
+	authToken := session.Values[AUTH_TOKEN]
+	fmt.Println("Auth Token...", authToken)
 
-	auth.SignOut(user.AccessToken)
+	auth.SignOut(authToken.(string))
 
 	session.Values[AUTH_KEY] = nil
-	session.Values[USER] = nil
+	session.Values[USER_ID] = nil
 
 	w.Header().Add("Hx-Push-Url", "/login")
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
