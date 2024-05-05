@@ -12,10 +12,7 @@ import (
 var (
 	SESSION_NAME string = "auth_session"
 	AUTH_KEY     string = "authenticated"
-	ACCESS_TOKEN string = "auth_token"
-	REFRESH      string = "refresh_token"
-	USER_ROLE    string = "user_role"
-	USER_ID      string = "user"
+	USER         string = "user"
 	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
 
@@ -46,7 +43,7 @@ func authMiddleware(HandlerFunc http.HandlerFunc) http.HandlerFunc {
 			}
 			sendErrorTemplate(msg, w)
 		}
-		if session.Values[AUTH_KEY] == nil || session.Values[USER_ID] == nil {
+		if session.Values[AUTH_KEY] == nil || session.Values[USER] == nil {
 			// user not auth...
 			msg := errMsg{
 				ErrorCode: 404,
@@ -84,17 +81,17 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Path:     "/dashboard",
 	}
+	userAuth := auth.User{
+		AccessToken:  user.AccessToken,
+		TokenType:    user.TokenType,
+		RefreshToken: user.RefreshToken,
+		ExpiresIn:    user.ExpiresIn,
+	}
+
 	session.Values[AUTH_KEY] = true
-	session.Values[USER_ID] = user.User.ID
-	// fmt.Println("Storing supabase.Auth user in session...")
-	// Cant store this -- get gob error..
-	// may have to just store each part?
-	// session.Values["USER"] = user
-	fmt.Println("Access Token: ", user.AccessToken)
-	fmt.Println("Refresh Token: ", user.RefreshToken)
-	fmt.Println("Expires In: ", user.ExpiresIn)
-	fmt.Println("User Role: ", user.User.Role)
-	err = session.Store().Save(r, w, session)
+	session.Values[USER] = userAuth
+
+	err = session.Save(r, w)
 	if err != nil {
 		// TODO: log error
 		w.WriteHeader(http.StatusUnauthorized)
@@ -102,8 +99,40 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 2. send user to dashboard?
-	//
 	w.Header().Add("Hx-Push-Url", "/dashboard")
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+}
+
+func logOut(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, SESSION_NAME)
+	if err != nil {
+		// TODO: log error
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+	}
+
+	val := session.Values[USER]
+	user := &auth.User{}
+	if user, ok := val.(*auth.User); !ok {
+		fmt.Println("Error getting user", user)
+		return
+		// Handle the case that it's not an expected type
+	}
+
+	auth.SignOut(user.AccessToken)
+
+	session.Values[AUTH_KEY] = nil
+	session.Values[USER] = nil
+
+	w.Header().Add("Hx-Push-Url", "/login")
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+
+	// doesn't show up after redirect
+	msg := getResponseMsg("You have been logged out successfully", Success)
+	sendLoginMessage(msg)
 }

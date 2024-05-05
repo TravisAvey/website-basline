@@ -15,6 +15,15 @@ var supa *supabase.Client
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
+type User struct {
+	AccessToken          string `json:"access_token"`
+	TokenType            string `json:"token_type"`
+	RefreshToken         string `json:"refresh_token"`
+	ProviderToken        string `json:"provider_token"`
+	ProviderRefreshToken string `json:"provider_refresh_token"`
+	ExpiresIn            int    `json:"expires_in"`
+}
+
 func setup() {
 	err := godotenv.Load("config/.env")
 	if err != nil {
@@ -52,4 +61,9 @@ func SignIn(email, password string) (*supabase.AuthenticatedDetails, error) {
 		Email:    email,
 		Password: password,
 	})
+}
+
+func SignOut(token string) error {
+	ctx := context.Background()
+	return supa.Auth.SignOut(ctx, token)
 }

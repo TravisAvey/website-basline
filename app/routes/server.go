@@ -1,11 +1,15 @@
 package routes
 
 import (
+	"encoding/gob"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/travisavey/baseline/app/auth"
 )
+
+type M map[string]interface{}
 
 func fileServer(router *mux.Router) {
 	fs := http.FileServer(http.Dir("web/dist/"))
@@ -13,6 +17,9 @@ func fileServer(router *mux.Router) {
 }
 
 func Init() {
+	gob.Register(&auth.User{})
+	gob.Register(&M{})
+
 	router := mux.NewRouter()
 
 	fileServer(router)
@@ -35,6 +42,7 @@ func Init() {
 	router.HandleFunc("/legal/terms", termsOfUse).Methods("GET")
 	router.HandleFunc("/login", loginPage).Methods("GET")
 	router.HandleFunc("/login", loginAttempt).Methods("POST")
+	router.HandleFunc("/logout", logOut).Methods("GET")
 
 	router.HandleFunc("/dashboard", authMiddleware(dashboard))
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
