@@ -35,7 +35,8 @@ func Init() {
 	router.HandleFunc("/legal/terms", termsOfUse).Methods("GET")
 	router.HandleFunc("/login", loginPage).Methods("GET")
 	router.HandleFunc("/login", loginAttempt).Methods("POST")
-	router.HandleFunc("/dashboard", dashboard)
+
+	router.HandleFunc("/dashboard", authMiddleware(dashboard))
 	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
 	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
 	router.HandleFunc("/dashboard/blog/count", dashboardPostCount).Methods("GET")

@@ -12,6 +12,9 @@ import (
 var (
 	SESSION_NAME string = "auth_session"
 	AUTH_KEY     string = "authenticated"
+	ACCESS_TOKEN string = "auth_token"
+	REFRESH      string = "refresh_token"
+	USER_ROLE    string = "user_role"
 	USER_ID      string = "user"
 	store               = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
@@ -83,6 +86,14 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	}
 	session.Values[AUTH_KEY] = true
 	session.Values[USER_ID] = user.User.ID
+	// fmt.Println("Storing supabase.Auth user in session...")
+	// Cant store this -- get gob error..
+	// may have to just store each part?
+	// session.Values["USER"] = user
+	fmt.Println("Access Token: ", user.AccessToken)
+	fmt.Println("Refresh Token: ", user.RefreshToken)
+	fmt.Println("Expires In: ", user.ExpiresIn)
+	fmt.Println("User Role: ", user.User.Role)
 	err = session.Store().Save(r, w, session)
 	if err != nil {
 		// TODO: log error
