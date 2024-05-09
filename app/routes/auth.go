@@ -35,17 +35,8 @@ func loginPage(w http.ResponseWriter, _ *http.Request) {
 
 func authMiddleware(HandlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, SESSION_NAME)
-		if err != nil {
-			// TODO: log error
-			msg := errMsg{
-				ErrorCode: 500,
-				Message:   "Sorry, something went wrong on our end",
-				Title:     "_Server Error",
-				ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-			}
-			sendErrorTemplate(msg, w)
-		}
+		session, _ := auth.GetNamed(r, SESSION_NAME)
+
 		if session.Values[AUTH_KEY] == nil || session.Values[USER_ID] == nil {
 			// user not auth...
 			msg := errMsg{
@@ -72,13 +63,8 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 1. store in session user logged in
-	session, err := store.Get(r, SESSION_NAME)
-	if err != nil {
-		// TODO: log error
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Println(err.Error())
-		return
-	}
+	session, _ := auth.GetNamed(r, SESSION_NAME)
+
 	session.Options = &sessions.Options{
 		MaxAge:   60 * 60 * 12,
 		HttpOnly: true,
@@ -106,20 +92,11 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 }
 
 func logOut(w http.ResponseWriter, r *http.Request) {
-	session, err := store.Get(r, SESSION_NAME)
-	if err != nil {
-		// TODO: log error
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-	}
+	session, _ := auth.GetNamed(r, SESSION_NAME)
 
 	authToken := session.Values[AUTH_TOKEN]
-	fmt.Println("Auth Token...", authToken)
+	fmt.Println("logOut: session.Value...", session.Values)
+	fmt.Println("logOut: Auth Token...", authToken)
 
 	auth.SignOut(authToken.(string))
 

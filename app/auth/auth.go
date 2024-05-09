@@ -5,13 +5,26 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+	"net/http"
 	"os"
 
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"github.com/nedpals/supabase-go"
 )
 
-var supa *supabase.Client
+var (
+	supa  *supabase.Client
+	store = sessions.NewCookieStore([]byte(GetSessionKey(32)))
+)
+
+func GetSession(r *http.Request) (*sessions.Session, error) {
+	return store.Get(r, "session-name")
+}
+
+func GetNamed(r *http.Request, name string) (*sessions.Session, error) {
+	return store.Get(r, name)
+}
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
