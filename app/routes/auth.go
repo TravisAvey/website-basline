@@ -16,7 +16,6 @@ var (
 	AUTH_TOKEN    string = "auth_token"
 	REFRESH_TOKEN string = "refresh_token"
 	EXPIRES_IN    string = "expires_in"
-	store                = sessions.NewCookieStore([]byte(auth.GetSessionKey(32)))
 )
 
 func loginPage(w http.ResponseWriter, _ *http.Request) {

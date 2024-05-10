@@ -38,10 +38,10 @@ func Setup() {
 	router.HandleFunc("/logout", logOut).Methods("GET")
 
 	router.HandleFunc("/dashboard", authMiddleware(dashboard))
-	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
-	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
+	router.HandleFunc("/dashboard/posts", authMiddleware(dashboardPosts)).Methods("GET")
+	router.HandleFunc("/dashboard/posts/{id}", authMiddleware(getPostByID)).Methods("GET")
 	router.HandleFunc("/dashboard/blog/count", dashboardPostCount).Methods("GET")
-	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
+	router.HandleFunc("/dashboard/gallery", authMiddleware(dashboardGallery)).Methods("GET")
 	router.HandleFunc("/dashboard/messages", getMessages).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", getMessage).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", messageRead).Methods("PUT")
