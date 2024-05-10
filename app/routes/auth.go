@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"time"
 
-	"github.com/gorilla/sessions"
 	"github.com/travisavey/baseline/app/auth"
 )
 
@@ -28,13 +28,18 @@ func loginPage(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles(files...)
 	err := t.ExecuteTemplate(w, "base", data)
 	if err != nil {
+		// TODO: log error
 		w.Write([]byte(err.Error()))
 	}
 }
 
 func authMiddleware(HandlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		session, _ := auth.GetNamed(r, SESSION_NAME)
+		session, err := auth.GetNamed(r, SESSION_NAME)
+		if err != nil {
+			// TODO: log error
+			fmt.Println("authMiddleware session:", err.Error())
+		}
 
 		if session.Values[AUTH_KEY] == nil || session.Values[USER_ID] == nil {
 			// user not auth...
@@ -62,22 +67,17 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := auth.GetNamed(r, SESSION_NAME)
-
-	session.Options = &sessions.Options{
-		MaxAge:   60 * 60 * 12,
-		HttpOnly: true,
-		Path:     "/dashboard",
+	session, err := auth.GetNamed(r, SESSION_NAME)
+	if err != nil {
+		// TODO: log error
+		fmt.Println("loginAttempt session error:", err.Error())
 	}
 
-	fmt.Println("user.AccessToken...", user.AccessToken)
 	session.Values[AUTH_KEY] = true
 	session.Values[USER_ID] = user.User.ID
 	session.Values[AUTH_TOKEN] = user.AccessToken
 	session.Values[REFRESH_TOKEN] = user.RefreshToken
 	session.Values[EXPIRES_IN] = user.ExpiresIn
-	fmt.Println("Auth Token...", session.Values[AUTH_TOKEN])
-	fmt.Println("session values: ", session.Values)
 
 	err = session.Save(r, w)
 	if err != nil {
@@ -92,20 +92,31 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 }
 
 func logOut(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Cookies())
-	session, _ := auth.GetNamed(r, SESSION_NAME)
+	session, err := auth.GetNamed(r, SESSION_NAME)
+	if err != nil {
+		// TODO: log error
+		fmt.Println("logOut session", err.Error())
+	}
 
 	authToken := session.Values[AUTH_TOKEN]
-	// authToken is always nil here =(
-	fmt.Println("logOut: session.Value...", session.Values)
-	fmt.Println("logOut: Auth Token...", authToken)
 
 	if authToken != nil {
 		auth.SignOut(authToken.(string))
 	}
+	// incase we have no authToken
+	// we can at least clear out the cookie
+	// and the session
+	session.Options.MaxAge = -1
+	session.Save(r, w)
 
-	session.Values[AUTH_KEY] = nil
-	session.Values[USER_ID] = nil
+	c := &http.Cookie{
+		Name:     SESSION_NAME,
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+	}
+	http.SetCookie(w, c)
 
 	w.Header().Add("Hx-Push-Url", "/login")
 	http.Redirect(w, r, "/login", http.StatusSeeOther)

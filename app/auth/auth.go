@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"github.com/nedpals/supabase-go"
@@ -39,7 +40,16 @@ func Setup() {
 	supaKey := os.Getenv("SUPABASE_KEY")
 
 	supa = supabase.CreateClient(supaUrl, supaKey, true)
-	store = sessions.NewCookieStore([]byte(GetSessionKey(32)))
+
+	authKey := securecookie.GenerateRandomKey(64)
+	encryptKey := securecookie.GenerateRandomKey(32)
+	store = sessions.NewCookieStore(authKey, encryptKey)
+	store.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 15,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+	}
 }
 
 func GetSessionKey(n int) string {
