@@ -1,25 +1,18 @@
 package routes
 
 import (
-	"encoding/gob"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/travisavey/baseline/app/auth"
 )
-
-type M map[string]interface{}
 
 func fileServer(router *mux.Router) {
 	fs := http.FileServer(http.Dir("web/dist/"))
 	router.PathPrefix("/dist/").Handler(http.StripPrefix("/dist/", fs))
 }
 
-func Init() {
-	gob.Register(&auth.User{})
-	gob.Register(&M{})
-
+func Setup() {
 	router := mux.NewRouter()
 
 	fileServer(router)

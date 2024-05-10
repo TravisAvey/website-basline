@@ -62,7 +62,7 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 		return
 	}
-	// 1. store in session user logged in
+
 	session, _ := auth.GetNamed(r, SESSION_NAME)
 
 	session.Options = &sessions.Options{
@@ -78,6 +78,7 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 	session.Values[REFRESH_TOKEN] = user.RefreshToken
 	session.Values[EXPIRES_IN] = user.ExpiresIn
 	fmt.Println("Auth Token...", session.Values[AUTH_TOKEN])
+	fmt.Println("session values: ", session.Values)
 
 	err = session.Save(r, w)
 	if err != nil {
@@ -92,13 +93,17 @@ func loginAttempt(w http.ResponseWriter, r *http.Request) {
 }
 
 func logOut(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Cookies())
 	session, _ := auth.GetNamed(r, SESSION_NAME)
 
 	authToken := session.Values[AUTH_TOKEN]
+	// authToken is always nil here =(
 	fmt.Println("logOut: session.Value...", session.Values)
 	fmt.Println("logOut: Auth Token...", authToken)
 
-	auth.SignOut(authToken.(string))
+	if authToken != nil {
+		auth.SignOut(authToken.(string))
+	}
 
 	session.Values[AUTH_KEY] = nil
 	session.Values[USER_ID] = nil
@@ -106,7 +111,7 @@ func logOut(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Hx-Push-Url", "/login")
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 
-	// doesn't show up after redirect
+	// TODO: doesn't show up after redirect
 	msg := getResponseMsg("You have been logged out successfully", Success)
 	sendLoginMessage(msg)
 }

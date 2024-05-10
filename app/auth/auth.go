@@ -15,7 +15,7 @@ import (
 
 var (
 	supa  *supabase.Client
-	store = sessions.NewCookieStore([]byte(GetSessionKey(32)))
+	store *sessions.CookieStore
 )
 
 func GetSession(r *http.Request) (*sessions.Session, error) {
@@ -28,16 +28,7 @@ func GetNamed(r *http.Request, name string) (*sessions.Session, error) {
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-type User struct {
-	AccessToken          string `json:"access_token"`
-	TokenType            string `json:"token_type"`
-	RefreshToken         string `json:"refresh_token"`
-	ProviderToken        string `json:"provider_token"`
-	ProviderRefreshToken string `json:"provider_refresh_token"`
-	ExpiresIn            int    `json:"expires_in"`
-}
-
-func setup() {
+func Setup() {
 	err := godotenv.Load("config/.env")
 	if err != nil {
 		// TODO: log error
@@ -48,6 +39,7 @@ func setup() {
 	supaKey := os.Getenv("SUPABASE_KEY")
 
 	supa = supabase.CreateClient(supaUrl, supaKey, true)
+	store = sessions.NewCookieStore([]byte(GetSessionKey(32)))
 }
 
 func GetSessionKey(n int) string {
@@ -61,10 +53,6 @@ func GetSessionKey(n int) string {
 		b[i] = letters[v.Int64()]
 	}
 	return string(b)
-}
-
-func Init() {
-	setup()
 }
 
 func SignIn(email, password string) (*supabase.AuthenticatedDetails, error) {
