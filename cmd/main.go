@@ -12,12 +12,12 @@ func main() {
 
 	var err error
 
-	auth.Init()
+	auth.Setup()
 
-	err = database.Init()
+	err = database.Setup()
 	if err != nil {
 		panic(err)
 	}
 
-	routes.Init()
+	routes.Setup()
 }

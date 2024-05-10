@@ -12,7 +12,7 @@ func fileServer(router *mux.Router) {
 	router.PathPrefix("/dist/").Handler(http.StripPrefix("/dist/", fs))
 }
 
-func Init() {
+func Setup() {
 	router := mux.NewRouter()
 
 	fileServer(router)
@@ -35,17 +35,20 @@ func Init() {
 	router.HandleFunc("/legal/terms", termsOfUse).Methods("GET")
 	router.HandleFunc("/login", loginPage).Methods("GET")
 	router.HandleFunc("/login", loginAttempt).Methods("POST")
-	router.HandleFunc("/dashboard", dashboard)
-	router.HandleFunc("/dashboard/posts", dashboardPosts).Methods("GET")
-	router.HandleFunc("/dashboard/posts/{id}", getPostByID).Methods("GET")
-	router.HandleFunc("/dashboard/blog/count", dashboardPostCount).Methods("GET")
-	router.HandleFunc("/dashboard/gallery", dashboardGallery).Methods("GET")
-	router.HandleFunc("/dashboard/messages", getMessages).Methods("GET")
-	router.HandleFunc("/dashboard/message/{id}", getMessage).Methods("GET")
-	router.HandleFunc("/dashboard/message/{id}", messageRead).Methods("PUT")
-	router.HandleFunc("/dashboard/message/{id}", messageDelete).Methods("DELETE")
-	router.HandleFunc("/dashboard/messages/unread", getMessageCount).Methods("GET")
-	router.HandleFunc("/sse-messages", sseEndpoint)
+	router.HandleFunc("/logout", logOut).Methods("GET")
+
+	router.HandleFunc("/dashboard", authMiddleware(dashboard))
+	router.HandleFunc("/dashboard/posts", authMiddleware(dashboardPosts)).Methods("GET")
+	router.HandleFunc("/dashboard/posts/{id}", authMiddleware(getPostByID)).Methods("GET")
+	router.HandleFunc("/dashboard/blog/count", authMiddleware(dashboardPostCount)).Methods("GET")
+	router.HandleFunc("/dashboard/gallery", authMiddleware(dashboardGallery)).Methods("GET")
+	router.HandleFunc("/dashboard/messages", authMiddleware(getMessages)).Methods("GET")
+	router.HandleFunc("/dashboard/message/{id}", authMiddleware(getMessage)).Methods("GET")
+	router.HandleFunc("/dashboard/message/{id}", authMiddleware(messageRead)).Methods("PUT")
+	router.HandleFunc("/dashboard/message/{id}", authMiddleware(messageDelete)).Methods("DELETE")
+	router.HandleFunc("/dashboard/messages/unread", authMiddleware(getMessageCount)).Methods("GET")
+	router.HandleFunc("/sse-messages", authMiddleware(sseEndpoint))
+
 	router.HandleFunc("/sse-login", sseLogin)
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)

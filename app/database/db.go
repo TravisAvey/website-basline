@@ -37,7 +37,7 @@ func getConnectionInfo() (string, error) {
 		connInfo.Host, connInfo.Port, connInfo.User, connInfo.Password, connInfo.DbName), nil
 }
 
-func Init() error {
+func Setup() error {
 	dsn, err := getConnectionInfo()
 	if err != nil {
 		return err
