@@ -1,9 +1,10 @@
-import EditorJS from '@editorjs/editorjs';
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
 
-
-const editor = new EditorJS({
-  /**
-   * Id of Element that should contain Editor instance
-   */
-  holder: "editor-js"
-});
+new Editor({
+  element: document.querySelector('.editor'),
+  extensions: [
+    StarterKit,
+  ],
+  content: '<p>Hello World!</p>',
+})
