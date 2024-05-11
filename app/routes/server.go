@@ -40,6 +40,8 @@ func Setup() {
 	router.HandleFunc("/dashboard", authMiddleware(dashboard))
 	router.HandleFunc("/dashboard/posts", authMiddleware(dashboardPosts)).Methods("GET")
 	router.HandleFunc("/dashboard/posts/{id}", authMiddleware(getPostByID)).Methods("GET")
+	router.HandleFunc("/dashboard/post/edit/{id}", authMiddleware(editPost)).Methods("GET")
+	router.HandleFunc("/dashboard/post/create", authMiddleware(newPost)).Methods("GET")
 	router.HandleFunc("/dashboard/blog/count", authMiddleware(dashboardPostCount)).Methods("GET")
 	router.HandleFunc("/dashboard/gallery", authMiddleware(dashboardGallery)).Methods("GET")
 	router.HandleFunc("/dashboard/messages", authMiddleware(getMessages)).Methods("GET")

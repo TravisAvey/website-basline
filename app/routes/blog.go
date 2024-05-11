@@ -58,35 +58,6 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-// create a post
-func createPost(w http.ResponseWriter, r *http.Request) {
-	post, err := parseFormData(r)
-	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end.",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-		// TODO: Log error
-		return
-	}
-
-	err = database.NewPost(post)
-	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end. We couldn't create a New Post",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-		// TODO: Log error
-		w.Write([]byte(err.Error()))
-	}
-}
-
 func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 

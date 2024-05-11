@@ -123,6 +123,84 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// TODO: name this something different.. this will just return the html
+// content with the post data loaded into the editorjs
+func editPost(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		msg := getResponseMsg("Something went wrong getting the post. ID parsing", Error)
+		sendSSEMessage(msg)
+		// TODO: log Error
+		return
+	}
+
+	var post database.Post
+	post, err = database.GetPostByID(id)
+	if err != nil {
+		msg := getResponseMsg("Something went wrong getting the post. DB retrieving", Error)
+		sendSSEMessage(msg)
+		// TODO: log error
+		return
+	}
+
+	content := []byte(post.Article.Content)
+	post.Article.HTML = template.HTML(content)
+
+	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
+	if post.Article.DateUpdated.Valid {
+		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/post.html")
+	err = t.Execute(w, post)
+	if err != nil {
+		// TODO: Log error
+		msg := getResponseMsg("There was an error creating the page", Error)
+		sendSSEMessage(msg)
+		w.Write([]byte(err.Error()))
+	}
+}
+
+// create a post
+func createPost(w http.ResponseWriter, r *http.Request) {
+	post, err := parseFormData(r)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end.",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		return
+	}
+
+	err = database.NewPost(post)
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end. We couldn't create a New Post",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		w.Write([]byte(err.Error()))
+	}
+}
+
+func newPost(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/new-post.html")
+	err := t.Execute(w, nil)
+	if err != nil {
+		// TODO: Log error
+		msg := getResponseMsg("There was an error creating the page", Error)
+		sendSSEMessage(msg)
+		w.Write([]byte(err.Error()))
+	}
+}
+
 func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
 	imgs, err := database.GetAllImages()
 	if err != nil {
