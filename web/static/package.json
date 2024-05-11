@@ -5,13 +5,17 @@
     "build": "tailwindcss build -i ./src/css/input.css -o ../dist/css/style.css --minify",
     "watch": "tailwindcss build -i ./src/css/input.css -o ../dist/css/style.css --watch",
     "alpine": "npx esbuild ./src/js/index.js --outfile=../dist/js/index.js --bundle --minify",
-    "scripts": "npx esbuild ./src/js/script.js --outfile=../dist/js/script.js"
+    "scripts": "npx esbuild ./src/js/script.js --outfile=../dist/js/script.js",
+    "editor": "npx esbuild ./src/js/editor.js --bundle --outfile=../dist/js/editor.js"
   },
   "devDependencies": {
     "daisyui": "^4.7.2",
     "tailwindcss": "^3.4.1"
   },
   "dependencies": {
+    "@tiptap/core": "^2.3.2",
+    "@tiptap/pm": "^2.3.2",
+    "@tiptap/starter-kit": "^2.3.2",
     "alpinejs": "^3.13.5",
     "esbuild": "^0.20.1"
   }
