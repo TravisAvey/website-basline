@@ -3,8 +3,9 @@ import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import Heading from '@tiptap/extension-heading'
+import Blockquote from "@tiptap/extension-blockquote"
 
-new Editor({
+/*new Editor({
   element: document.querySelector('#editor'),
   extensions: [
     Document,
@@ -12,11 +13,127 @@ new Editor({
     Text,
     Heading.configure({
       levels: [1,2,3],
+    }),
+    Blockquote.configure({
+      HTMLAttributes: {
+        class: ""
+      }
     })
   ],
   content: '<p>Example Text</p>',
   autofocus: true,
   editable: true,
   injectCSS: false,
-})
+})*/
+
+class EditorController {
+  constructor(initialText) {
+    this.buttonElements = {}
+    this.createEditor(editorID, initialText)
+    this.addButtonListeners()
+  }
+
+  createEditor(initialText) {
+    this.textEditorElement = document.querySelector("#editor")
+    this.editorElement = this.textEditorElement.querySelector("[data-editor]")
+    this.editor = new Editor({
+      element: this.editorElement,
+      extensions: [
+        Document,
+        Paragraph,
+        Text,
+        Heading.configure({
+          levels: [1,2,3],
+        }),
+        Blockquote.configure({
+          HTMLAttributes: {
+            class: ""
+          }
+        })
+      ],
+      autofocus: true,
+      editable: true,
+      injectCSS: false,
+      // A transaction occurs every time something about the editor changes, including
+      // moving the caret. Here we update the on/off state of the buttons based on
+      // the text under the caret.
+      onTransaction: () => this.updateButtons(),
+      content: `<p>${initialText}</p>`,
+    })
+  }
+
+  addButtonListeners() {
+    this.addButtonListener("heading-1",   chain => { return chain.toggleHeading({ level: 1 }) })
+    this.addButtonListener("heading-2",   chain => { return chain.toggleHeading({ level: 2 }) })
+    this.addButtonListener("heading-3",   chain => { return chain.toggleHeading({ level: 3 }) })
+    this.addButtonListener("bold",        chain => { return chain.toggleBold() })
+    this.addButtonListener("italic",      chain => { return chain.toggleItalic() })
+    this.addButtonListener("strike",      chain => { return chain.toggleStrike() })
+    this.addButtonListener("bulletList",  chain => { return chain.toggleBulletList() })
+    this.addButtonListener("orderedList", chain => { return chain.toggleOrderedList() })
+    this.addButtonListener("undo",        chain => { return chain.undo() })
+    this.addButtonListener("redo",        chain => { return chain.redo() })
+  }
+
+  addButtonListener(dataAttribute, command) {
+    const buttonElements = this.textEditorElement.querySelectorAll(`[data-${dataAttribute}]`)
+    buttonElements.forEach(buttonElement => {
+      this.buttonElements[dataAttribute] = buttonElement
+      buttonElement.addEventListener("click", event => {
+        // TipTap commands can be chained into one-liners For example, the chain
+        // `editor.chain().focus().toggleBold().run()` toggles the bold style.
+        // Here we delegate the third call in the chain (that actually changes
+        // the style) to the command callback parameter:
+        command(this.editor.chain().focus()).run()
+        this.updateButtons()
+      })
+    })
+  }
+
+  updateButtons() {
+    this.updateHeadingButtons()
+    this.updateStyleButtons()
+  }
+
+  updateHeadingButtons() {
+    [1, 2, 3].forEach(level => {
+      const dataAttribute = `heading-${level}`
+      const buttonOn = this.editor.isActive("heading", { level: level })
+      this.updateButtonState(dataAttribute, buttonOn)
+    })
+  }
+
+  updateStyleButtons() {
+    ["bold", "italic", "strike", "bulletList", "orderedList"].forEach(dataAttribute => {
+      const buttonOn = this.editor.isActive(dataAttribute)
+      this.updateButtonState(dataAttribute, buttonOn)
+    })
+  }
+
+  updateButtonState(dataAttribute, buttonOn) {
+    const buttonElement = this.buttonElements[dataAttribute]
+    if (buttonOn) {
+      this.buttonOn(buttonElement)
+    } else {
+      this.buttonOff(buttonElement)
+    }
+  }
+
+  buttonOn(buttonElement) {
+    buttonElement.classList.remove("bg-white")
+    buttonElement.classList.remove("text-gray-900")
+    buttonElement.classList.add("bg-gray-700")
+    buttonElement.classList.add("text-white")
+  }
+
+  buttonOff(buttonElement) {
+    buttonElement.classList.add("bg-white")
+    buttonElement.classList.add("text-gray-900")
+    buttonElement.classList.remove("bg-gray-700")
+    buttonElement.classList.remove("text-white")
+  }
+}
+
+
+const editorController = new EditorController("Write Your Epic Content")
 
