@@ -27,14 +27,14 @@ import Blockquote from "@tiptap/extension-blockquote"
 })*/
 
 class EditorController {
-  constructor(initialText) {
+  constructor(editorID, initialText) {
     this.buttonElements = {}
     this.createEditor(editorID, initialText)
     this.addButtonListeners()
   }
 
-  createEditor(initialText) {
-    this.textEditorElement = document.querySelector("#editor")
+  createEditor(editorID, initialText) {
+    this.textEditorElement = document.querySelector(`[data-text-editor="${editorID}"]`)
     this.editorElement = this.textEditorElement.querySelector("[data-editor]")
     this.editor = new Editor({
       element: this.editorElement,
@@ -135,5 +135,5 @@ class EditorController {
 }
 
 
-const editorController = new EditorController("Write Your Epic Content")
+const editorController = new EditorController("editor", "Write Your Epic Content")
 
