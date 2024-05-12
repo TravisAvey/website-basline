@@ -4,27 +4,12 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import Heading from '@tiptap/extension-heading'
 import Blockquote from "@tiptap/extension-blockquote"
-
-/*new Editor({
-  element: document.querySelector('#editor'),
-  extensions: [
-    Document,
-    Paragraph,
-    Text,
-    Heading.configure({
-      levels: [1,2,3],
-    }),
-    Blockquote.configure({
-      HTMLAttributes: {
-        class: ""
-      }
-    })
-  ],
-  content: '<p>Example Text</p>',
-  autofocus: true,
-  editable: true,
-  injectCSS: false,
-})*/
+import Strike from "@tiptap/extension-strike"
+import Bold from "@tiptap/extension-bold"
+import BulletList from '@tiptap/extension-bullet-list'
+import ListItem from '@tiptap/extension-list-item'
+import OrderedList from '@tiptap/extension-ordered-list'
+import Italic from '@tiptap/extension-italic'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -42,12 +27,43 @@ class EditorController {
         Document,
         Paragraph,
         Text,
+        Bold.configure({
+          HTMLAttributes: {
+            class: "font-bold"
+          }
+        }),
+        Italic.configure({
+          HTMLAttributes: {
+            class: "italic",
+          },
+        }),
         Heading.configure({
           levels: [1,2,3],
+          HTMLAttributes: {
+            // TODO: there's a way to make a custom class for each...
+            // https://github.com/ueberdosis/tiptap/issues/1514#issuecomment-1225496336
+            class: "text-2xl"
+          }
         }),
+        BulletList.configure({
+          HTMLAttributes: {
+            class: "list-disc"
+          }
+        }),
+        OrderedList.configure({
+          HTMLAttributes: {
+            class: "list-decimal"
+          }
+        }),
+        ListItem,
         Blockquote.configure({
           HTMLAttributes: {
-            class: ""
+            class: "relative border-s-4 ps-4 sm:ps-6 dark:border-neutral-700"
+          }
+        }),
+        Strike.configure({
+          HTMLAttributes: {
+            class: "line-through"
           }
         })
       ],
@@ -73,6 +89,7 @@ class EditorController {
     this.addButtonListener("orderedList", chain => { return chain.toggleOrderedList() })
     this.addButtonListener("undo",        chain => { return chain.undo() })
     this.addButtonListener("redo",        chain => { return chain.redo() })
+    this.addButtonListener("quote",       chain => { return chain.toggleBlockquote() })
   }
 
   addButtonListener(dataAttribute, command) {
@@ -104,7 +121,7 @@ class EditorController {
   }
 
   updateStyleButtons() {
-    ["bold", "italic", "strike", "bulletList", "orderedList"].forEach(dataAttribute => {
+    ["bold", "italic", "strike", "bulletList", "orderedList", "quote"].forEach(dataAttribute => {
       const buttonOn = this.editor.isActive(dataAttribute)
       this.updateButtonState(dataAttribute, buttonOn)
     })
