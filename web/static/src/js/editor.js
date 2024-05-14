@@ -32,12 +32,12 @@ class EditorController {
         Text,
         Bold.configure({
           HTMLAttributes: {
-            class: "font-bold"
+            class: "font-bold text-gray-800 "
           }
         }),
         Italic.configure({
           HTMLAttributes: {
-            class: "italic",
+            class: "italic text-gray-800 ",
           },
         }),
         Heading.configure({
@@ -45,39 +45,39 @@ class EditorController {
           HTMLAttributes: {
             // TODO: there's a way to make a custom class for each...
             // https://github.com/ueberdosis/tiptap/issues/1514#issuecomment-1225496336
-            class: "text-2xl"
+            class: "text-gray-800"
           }
         }),
         BulletList.configure({
           HTMLAttributes: {
-            class: "list-disc"
+            class: "list-disc text-gray-800 "
           }
         }),
         OrderedList.configure({
           HTMLAttributes: {
-            class: "list-decimal"
+            class: "list-decimal text-gray-800 "
           }
         }),
         ListItem,
         Blockquote.configure({
           HTMLAttributes: {
-            class: "relative border-s-4 ps-4 sm:ps-6 dark:border-neutral-700"
+            class: "relative border-s-4 ps-4 sm:ps-6 dark:border-neutral-700 text-gray-800 "
           }
         }),
         Strike.configure({
           HTMLAttributes: {
-            class: "line-through"
+            class: "line-through text-gray-800 "
           }
         }),
         Underline.configure({
           HTMLAttributes: {
-            class: "underline"
+            class: "underline text-gray-800 "
           }
         })
       ],
       editorProps: {
         attributes: {
-          class: 'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+          class: 'prose text-gray-800 prose-sm sm:prose-base lg:prose-lg m-3 focus:outline-none',
         },
       },
       autofocus: true,
