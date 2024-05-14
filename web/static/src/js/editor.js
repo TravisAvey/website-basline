@@ -11,6 +11,7 @@ import BulletList from '@tiptap/extension-bullet-list'
 import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
 import Italic from '@tiptap/extension-italic'
+import Underline from '@tiptap/extension-underline'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -67,6 +68,11 @@ class EditorController {
           HTMLAttributes: {
             class: "line-through"
           }
+        }),
+        Underline.configure({
+          HTMLAttributes: {
+            class: "underline"
+          }
         })
       ],
       autofocus: true,
@@ -92,6 +98,7 @@ class EditorController {
     this.addButtonListener("undo",        chain => { return chain.undo() })
     this.addButtonListener("redo",        chain => { return chain.redo() })
     this.addButtonListener("quote",       chain => { return chain.toggleBlockquote() })
+    this.addButtonListener("underline",       chain => { return chain.toggleUnderline() })
   }
 
   addButtonListener(dataAttribute, command) {
@@ -123,7 +130,7 @@ class EditorController {
   }
 
   updateStyleButtons() {
-    ["bold", "italic", "strike", "bulletList", "orderedList", "quote"].forEach(dataAttribute => {
+    ["bold", "italic", "strike", "bulletList", "orderedList", "quote", "underline"].forEach(dataAttribute => {
       const buttonOn = this.editor.isActive(dataAttribute)
       this.updateButtonState(dataAttribute, buttonOn)
     })
