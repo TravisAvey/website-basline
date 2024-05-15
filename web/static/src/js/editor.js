@@ -12,6 +12,7 @@ import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
 import Italic from '@tiptap/extension-italic'
 import Underline from '@tiptap/extension-underline'
+import Highlight from '@tiptap/extension-highlight'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -43,8 +44,6 @@ class EditorController {
         Heading.configure({
           levels: [1,2,3],
           HTMLAttributes: {
-            // TODO: there's a way to make a custom class for each...
-            // https://github.com/ueberdosis/tiptap/issues/1514#issuecomment-1225496336
             class: "text-gray-800"
           }
         }),
@@ -73,6 +72,9 @@ class EditorController {
           HTMLAttributes: {
             class: "underline text-gray-800 "
           }
+        }),
+        Highlight.configure({
+          multicolor: true
         })
       ],
       editorProps: {
@@ -103,7 +105,8 @@ class EditorController {
     this.addButtonListener("undo",        chain => { return chain.undo() })
     this.addButtonListener("redo",        chain => { return chain.redo() })
     this.addButtonListener("quote",       chain => { return chain.toggleBlockquote() })
-    this.addButtonListener("underline",       chain => { return chain.toggleUnderline() })
+    this.addButtonListener("underline",   chain => { return chain.toggleUnderline() })
+    this.addButtonListener("highlight",   chain => { return chain.toggleHighlight() })
   }
 
   addButtonListener(dataAttribute, command) {
@@ -135,7 +138,7 @@ class EditorController {
   }
 
   updateStyleButtons() {
-    ["bold", "italic", "strike", "bulletList", "orderedList", "quote", "underline"].forEach(dataAttribute => {
+    ["bold", "italic", "strike", "bulletList", "orderedList", "quote", "underline", "highlight"].forEach(dataAttribute => {
       const buttonOn = this.editor.isActive(dataAttribute)
       this.updateButtonState(dataAttribute, buttonOn)
     })
