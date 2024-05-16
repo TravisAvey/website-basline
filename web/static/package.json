@@ -26,6 +26,7 @@
     "@tiptap/extension-list-item": "^2.3.2",
     "@tiptap/extension-ordered-list": "^2.3.2",
     "@tiptap/extension-strike": "^2.3.2",
+    "@tiptap/extension-text-align": "^2.4.0",
     "@tiptap/extension-underline": "^2.3.2",
     "@tiptap/pm": "^2.3.2",
     "@tiptap/starter-kit": "^2.3.2",

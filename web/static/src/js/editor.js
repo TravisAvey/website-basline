@@ -15,6 +15,7 @@ import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
+import TextAlign from '@tiptap/extension-text-align'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -33,6 +34,9 @@ class EditorController {
         History,
         Paragraph,
         Text,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
         Bold.configure({
           HTMLAttributes: {
             class: "font-bold text-gray-800 "
@@ -128,27 +132,35 @@ class EditorController {
       const previousUrl = this.editor.getAttributes('link').href
       // TODO: here we could add in a better prompt...
       const url = window.prompt('URL', previousUrl)
-
       if (url === null) {
         return
       }
-
       if (url === '') {
         this.editor.commands.unsetLink()
       }
-
       this.editor.commands.toggleLink({ href: url, target: "_blank" })
-
     })
 
     this.textEditorElement.querySelector(`[data-image]`).addEventListener("click", event => {
       // TODO: better prompt with ability to get alt and title here...
       const url = window.prompt('URL')
-
       if (url) {
         this.editor.commands.setImage({ src: url, alt: "alt text", title: "title of image"})
       }
     })
+
+    this.textEditorElement.querySelector(`[data-alignLeft]`).addEventListener("click", event => {
+      this.editor.commands.setTextAlign("left")
+    })
+
+    this.textEditorElement.querySelector(`[data-alignCenter]`).addEventListener("click", event => {
+      this.editor.commands.setTextAlign("center")
+    })
+
+    this.textEditorElement.querySelector(`[data-alignRight]`).addEventListener("click", event => {
+      this.editor.commands.setTextAlign("right")
+    })
+
   }
 
 
@@ -181,7 +193,8 @@ class EditorController {
   }
 
   updateStyleButtons() {
-    ["bold", "italic", "strike", "bulletList", "orderedList", "quote", "underline", "highlight"].forEach(dataAttribute => {
+    ["bold", "italic", "strike", "bulletList", "orderedList", 
+      "quote", "underline", "highlight"].forEach(dataAttribute => {
       const buttonOn = this.editor.isActive(dataAttribute)
       this.updateButtonState(dataAttribute, buttonOn)
     })
