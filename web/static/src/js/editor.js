@@ -14,6 +14,7 @@ import Italic from '@tiptap/extension-italic'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -83,6 +84,13 @@ class EditorController {
           HTMLAttributes: {
             class: "link link-primary link-hover text-primary",
           },
+        }),
+        Image.configure({
+          inline: true,
+          HTMLAttributes: {
+            class: "",
+          }
+
         })
       ],
       editorProps: {
@@ -131,6 +139,15 @@ class EditorController {
 
       this.editor.commands.toggleLink({ href: url, target: "_blank" })
 
+    })
+
+    this.textEditorElement.querySelector(`[data-image]`).addEventListener("click", event => {
+      // TODO: better prompt with ability to get alt and title here...
+      const url = window.prompt('URL')
+
+      if (url) {
+        this.editor.commands.setImage({ src: url, alt: "alt text", title: "title of image"})
+      }
     })
   }
 
