@@ -13,6 +13,7 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import Italic from '@tiptap/extension-italic'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
+import Link from '@tiptap/extension-link'
 
 class EditorController {
   constructor(editorID, initialText) {
@@ -75,6 +76,13 @@ class EditorController {
         }),
         Highlight.configure({
           multicolor: true
+        }),
+        Link.configure({
+          openOnClick: true,
+          autolink: true,
+          HTMLAttributes: {
+            class: "link link-primary link-hover text-primary",
+          },
         })
       ],
       editorProps: {
@@ -107,7 +115,25 @@ class EditorController {
     this.addButtonListener("quote",       chain => { return chain.toggleBlockquote() })
     this.addButtonListener("underline",   chain => { return chain.toggleUnderline() })
     this.addButtonListener("highlight",   chain => { return chain.toggleHighlight() })
+
+    this.textEditorElement.querySelector(`[data-link]`).addEventListener("click", event => {
+      const previousUrl = this.editor.getAttributes('link').href
+      // TODO: here we could add in a better prompt...
+      const url = window.prompt('URL', previousUrl)
+
+      if (url === null) {
+        return
+      }
+
+      if (url === '') {
+        this.editor.commands.unsetLink()
+      }
+
+      this.editor.commands.toggleLink({ href: url, target: "_blank" })
+
+    })
   }
+
 
   addButtonListener(dataAttribute, command) {
     const buttonElements = this.textEditorElement.querySelectorAll(`[data-${dataAttribute}]`)
