@@ -1,5 +1,33 @@
 <script src="/dist/js/editor.js" type="module" defer></script>
 
+<form>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Title
+    <input id="title" type="text" class="grow" placeholder="Title of Post" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Post Date
+    <input id="postDate" type="date" class="grow" placeholder="Title of Post" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Slug
+    <input id="slug" type="text" class="grow" placeholder="post-link" />
+  </label>
+  <label id="imageURL" class="input input-bordered flex items-center gap-2 mt-4">
+    Hero Image URL
+    <input type="text" class="grow" placeholder="this.com/image.jpg" />
+  </label>
+  <label id="keywords" class="input input-bordered flex items-center gap-2 mt-4">
+    Keywords
+    <input type="text" class="grow" placeholder="keywords hello" />
+  </label>
+  <textarea id="summary" class="textarea textarea-bordered my-4 w-full" cols="100" placeholder="Summary">
+  </textarea>
+  <div class="mb-4">
+    <button type="button" class="btn btn-error text-white">Cancel</button>
+    <button type="button" class="btn btn-success text-white">Post</button>
+  </div>
+</form>
 <section class="text-gray-800">
   <h2 class="text-xl font-bold">Write Your Epic Post</h2>
 
