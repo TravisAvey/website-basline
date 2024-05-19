@@ -107,8 +107,8 @@ class EditorController {
       injectCSS: false,
       onUpdate({editor}) {
         // get the id of the hidden text input
-        const input = document.getElementById("content")
-        input.value = editor.getHTML()
+        const output = document.getElementById("editor-output")
+        output.value = editor.getHTML()
 
       },
       // A transaction occurs every time something about the editor changes, including
