@@ -1,31 +1,31 @@
 <script src="/dist/js/editor.js" type="module" defer></script>
 
-<div>
+<form hx-post="/dashboard/posts/new">
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Title
-    <input id="title" type="text" class="grow" placeholder="Title of Post" />
+    <input name="title" type="text" class="grow" placeholder="Title of Post" />
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Post Date
-    <input id="postDate" type="date" class="grow" placeholder="Title of Post" />
+    <input name="postDate" type="date" class="grow" placeholder="Title of Post" />
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Slug
-    <input id="slug" type="text" class="grow" placeholder="post-link" />
+    <input name="slug" type="text" class="grow" placeholder="post-link" />
   </label>
-  <label id="imageURL" class="input input-bordered flex items-center gap-2 mt-4">
+  <label name="imageURL" class="input input-bordered flex items-center gap-2 mt-4">
     Hero Image URL
     <input type="text" class="grow" placeholder="this.com/image.jpg" />
   </label>
-  <label id="keywords" class="input input-bordered flex items-center gap-2 mt-4">
+  <label name="keywords" class="input input-bordered flex items-center gap-2 mt-4">
     Keywords
     <input type="text" class="grow" placeholder="keywords hello" />
   </label>
-  <textarea id="summary" class="textarea textarea-bordered my-4 w-full" cols="100" placeholder="Summary">
+  <textarea name="summary" class="textarea textarea-bordered my-4 w-full" cols="100" placeholder="Summary">
   </textarea>
   <div class="mb-4">
     <button type="button" class="btn btn-error text-white">Cancel</button>
-    <button type="button" class="btn btn-success text-white">Post</button>
+    <button type="submit" class="btn btn-success text-white">Post</button>
   </div>
   <section class="text-gray-800">
     <h2 class="text-xl font-bold">Write Your Epic Post</h2>
@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="mt-2 px-3 py-2 border border-gray-300 rounded" data-editor></div>
-      <input type="hidden" id="editor" name="editor" value="">
+      <input type="hidden" id="content" name="content" value="">
     </div>
   </section>
-</div>
+</form>

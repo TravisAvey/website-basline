@@ -33,11 +33,12 @@ func parseFormData(r *http.Request) (database.Post, error) {
 	if err != nil {
 		return database.Post{}, err
 	}
+	fmt.Println(r.Form)
 
-	catID, err := strconv.ParseInt(r.FormValue("categoryId"), 10, 64)
-	if err != nil {
-		return database.Post{}, err
-	}
+	//catID, err := strconv.ParseInt(r.FormValue("categoryId"), 10, 64)
+	//if err != nil {
+	//	return database.Post{}, err
+	//}
 	post := database.Post{
 		Article: database.Article{
 			Title:    r.FormValue("title"),
@@ -51,11 +52,11 @@ func parseFormData(r *http.Request) (database.Post, error) {
 		// should have our form have pre configured
 		// selectable categories...
 		// also, figure out how to parse an array here
-		Categories: []database.Category{
-			{
-				ID: catID,
-			},
-		},
+		//Categories: []database.Category{
+		//	{
+		//		ID: catID,
+		//	},
+		//},
 	}
 
 	return post, nil

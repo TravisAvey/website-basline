@@ -20,7 +20,6 @@ func Setup() {
 	router.HandleFunc("/", index)
 	router.HandleFunc("/about", about)
 	router.HandleFunc("/blog", blog)
-	router.HandleFunc("/blog/posts/new", createPost).Methods("POST")
 	router.HandleFunc("/blog/posts/s/{slug}", getPostBySlug).Methods("GET")
 	router.HandleFunc("/blog/posts/{id}", updatePost).Methods("PUT")
 	router.HandleFunc("/blog/posts/{id}", deletePost).Methods("DELETE")
@@ -39,6 +38,7 @@ func Setup() {
 
 	router.HandleFunc("/dashboard", authMiddleware(dashboard))
 	router.HandleFunc("/dashboard/posts", authMiddleware(dashboardPosts)).Methods("GET")
+	router.HandleFunc("/dashboard/posts/new", createPost).Methods("POST")
 	router.HandleFunc("/dashboard/posts/{id}", authMiddleware(getPostByID)).Methods("GET")
 	router.HandleFunc("/dashboard/post/edit/{id}", authMiddleware(editPost)).Methods("GET")
 	router.HandleFunc("/dashboard/post/create", authMiddleware(newPost)).Methods("GET")
