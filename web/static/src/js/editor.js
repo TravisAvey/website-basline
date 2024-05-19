@@ -105,6 +105,12 @@ class EditorController {
       autofocus: true,
       editable: true,
       injectCSS: false,
+      onUpdate({editor}) {
+        // get the id of the hidden text input
+        const input = document.getElementById("editor")
+        input.value = editor.getHTML()
+
+      },
       // A transaction occurs every time something about the editor changes, including
       // moving the caret. Here we update the on/off state of the buttons based on
       // the text under the caret.
