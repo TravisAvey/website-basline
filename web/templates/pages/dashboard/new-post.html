@@ -21,9 +21,15 @@
     Keywords
     <input type="text" class="grow" placeholder="keywords hello" />
   </label>
-  <textarea name="summary" class="textarea textarea-bordered my-4 w-full" cols="100" placeholder="Summary">
-  </textarea>
-  <div class="mb-4">
+  <textarea name="summary" class="textarea textarea-bordered mt-4 w-full" placeholder="Summary"></textarea>
+  <label name="keywords" class="input input-bordered flex items-center gap-2 mt-4">
+    Categories
+    {{ range .Categories }}
+    <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
+  </label>
+
+  <div class="my-4">
     <button type="button" class="btn btn-error text-white">Cancel</button>
     <button type="submit" class="btn btn-success text-white">Post</button>
   </div>

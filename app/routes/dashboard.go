@@ -191,8 +191,27 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func newPost(w http.ResponseWriter, r *http.Request) {
+	cats, err := database.GetBlogCategories()
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end. We couldn't create a New Post",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		w.Write([]byte(err.Error()))
+	}
+
+	data := struct {
+		Categories []database.Category
+	}{
+		Categories: cats,
+	}
+
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/new-post.html")
-	err := t.Execute(w, nil)
+	err = t.Execute(w, data)
 	if err != nil {
 		// TODO: Log error
 		msg := getResponseMsg("There was an error creating the page", Error)

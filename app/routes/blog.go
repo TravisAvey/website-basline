@@ -168,3 +168,20 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func getBlogCategories(w http.ResponseWriter, _ *http.Request) {
+	cats, err := database.GetBlogCategories()
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end getting Blog Categories",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		return
+	}
+
+	fmt.Println("Blog Categories", cats)
+}
