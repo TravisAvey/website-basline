@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/travisavey/baseline/app/database"
@@ -28,17 +29,43 @@ func getBaseTemplates() []string {
 	}
 }
 
-func parseFormData(r *http.Request) (database.Post, error) {
+func parsePostCategories(r *http.Request) ([]database.Category, error) {
+	var categories []database.Category
+
+	strCats := strings.Split(r.FormValue("categories"), ",")
+
+	for _, cat := range strCats {
+		id, err := database.GetPostCategoryID(cat)
+		if err != nil {
+			return categories, err
+		}
+		category := database.Category{
+			Category: cat,
+			ID:       id,
+		}
+		categories = append(categories, category)
+	}
+
+	return categories, nil
+}
+
+func parsePostForm(r *http.Request) (database.Post, error) {
 	err := r.ParseForm()
 	if err != nil {
 		return database.Post{}, err
 	}
 	fmt.Println(r.Form)
 
+	// TODO: need Categories.ID passed to backend here?
 	//catID, err := strconv.ParseInt(r.FormValue("categoryId"), 10, 64)
 	//if err != nil {
 	//	return database.Post{}, err
 	//}
+
+	categories, err := parsePostCategories(r)
+	if err != nil {
+		return database.Post{}, err
+	}
 	post := database.Post{
 		Article: database.Article{
 			Title:    r.FormValue("title"),
@@ -48,15 +75,7 @@ func parseFormData(r *http.Request) (database.Post, error) {
 			Slug:     r.FormValue("slug"),
 			Keywords: r.FormValue("keywords"),
 		},
-		// TODO: figure this out..
-		// should have our form have pre configured
-		// selectable categories...
-		// also, figure out how to parse an array here
-		//Categories: []database.Category{
-		//	{
-		//		ID: catID,
-		//	},
-		//},
+		Categories: categories,
 	}
 
 	return post, nil

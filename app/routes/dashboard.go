@@ -4,6 +4,7 @@ package routes
 // will need auth working for a backend
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -163,7 +164,7 @@ func editPost(w http.ResponseWriter, r *http.Request) {
 
 // create a post
 func createPost(w http.ResponseWriter, r *http.Request) {
-	post, err := parseFormData(r)
+	post, err := parsePostForm(r)
 	if err != nil {
 		msg := errMsg{
 			ErrorCode: 500,
@@ -173,6 +174,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
+		fmt.Println("parsePostForm error", err.Error())
 		return
 	}
 
@@ -186,7 +188,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
-		w.Write([]byte(err.Error()))
+		fmt.Println("parsePostForm error", err.Error())
 	}
 }
 
