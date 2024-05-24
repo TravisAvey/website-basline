@@ -1,4 +1,4 @@
-import { Editor } from '@tiptap/core'
+import { Editor, mergeAttributes } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
 import History from '@tiptap/extension-history'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -52,6 +52,26 @@ class EditorController {
           HTMLAttributes: {
             class: "text-gray-800"
           }
+        }).extend({
+          levels: [1,2,3],
+          renderHTML({ node, HTMLAttributes }) {
+            const level = this.options.levels.includes(node.attrs.level) 
+          ? node.attrs.level 
+          : this.options.levels[0]
+          const classes = {
+            1: 'text-4xl',
+            2: 'text-3xl',
+            3: 'text-2xl',
+          }
+          return [
+            `h${level}`,
+            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+              class: `${classes[level]}`,
+            }),
+            0,
+          ]
+
+          },
         }),
         BulletList.configure({
           HTMLAttributes: {
