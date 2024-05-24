@@ -190,6 +190,8 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		// TODO: Log error
 		fmt.Println("parsePostForm error", err.Error())
 	}
+	msg := getResponseMsg("Post Created Successfully", Success)
+	sendSSEMessage(msg)
 }
 
 func newPost(w http.ResponseWriter, r *http.Request) {

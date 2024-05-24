@@ -54,13 +54,6 @@ func parsePostForm(r *http.Request) (database.Post, error) {
 	if err != nil {
 		return database.Post{}, err
 	}
-	fmt.Println(r.Form)
-
-	// TODO: need Categories.ID passed to backend here?
-	//catID, err := strconv.ParseInt(r.FormValue("categoryId"), 10, 64)
-	//if err != nil {
-	//	return database.Post{}, err
-	//}
 
 	categories, err := parsePostCategories(r)
 	if err != nil {
