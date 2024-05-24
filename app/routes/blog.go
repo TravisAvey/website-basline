@@ -112,7 +112,7 @@ func getPosts(w http.ResponseWriter, _ *http.Request) {
 
 // update a post
 func updatePost(w http.ResponseWriter, r *http.Request) {
-	post, err := parseFormData(r)
+	post, err := parsePostForm(r)
 	if err != nil {
 		msg := errMsg{
 			ErrorCode: 500,
@@ -167,4 +167,21 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 		// TODO: Log error
 		return
 	}
+}
+
+func getBlogCategories(w http.ResponseWriter, _ *http.Request) {
+	cats, err := database.GetBlogCategories()
+	if err != nil {
+		msg := errMsg{
+			ErrorCode: 500,
+			Message:   "Sorry, something went wrong on our end getting Blog Categories",
+			Title:     "_Server Error",
+			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
+		}
+		sendErrorTemplate(msg, w)
+		// TODO: Log error
+		return
+	}
+
+	fmt.Println("Blog Categories", cats)
 }

@@ -1,4 +1,4 @@
-import { Editor } from '@tiptap/core'
+import { Editor, mergeAttributes } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
 import History from '@tiptap/extension-history'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -52,6 +52,26 @@ class EditorController {
           HTMLAttributes: {
             class: "text-gray-800"
           }
+        }).extend({
+          levels: [1,2,3],
+          renderHTML({ node, HTMLAttributes }) {
+            const level = this.options.levels.includes(node.attrs.level) 
+          ? node.attrs.level 
+          : this.options.levels[0]
+          const classes = {
+            1: 'text-4xl',
+            2: 'text-3xl',
+            3: 'text-2xl',
+          }
+          return [
+            `h${level}`,
+            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+              class: `${classes[level]}`,
+            }),
+            0,
+          ]
+
+          },
         }),
         BulletList.configure({
           HTMLAttributes: {
@@ -105,6 +125,12 @@ class EditorController {
       autofocus: true,
       editable: true,
       injectCSS: false,
+      onUpdate({editor}) {
+        // get the id of the hidden text input
+        const output = document.getElementById("editor-output")
+        output.value = editor.getHTML()
+
+      },
       // A transaction occurs every time something about the editor changes, including
       // moving the caret. Here we update the on/off state of the buttons based on
       // the text under the caret.
@@ -226,4 +252,49 @@ class EditorController {
 
 
 const editorController = new EditorController("editor", "Write Your Epic Content")
+
+// our container of all our categories buttons
+const cats = document.getElementById("categories")
+// our hidden input to put our values for hx-post to server
+var catOutput = document.getElementById("categories-output")
+// a list to keep track of all our categories
+var categories = []
+
+for (const cat of cats.children) {
+  cat.addEventListener("click", event => {
+
+    // get current category and index
+    const current = cat.innerText
+    const index = categories.indexOf(current)
+
+    // if the class is badge-outline, then it's not
+    // a selected category
+    if (cat.classList.contains("badge-outline")) {
+      // flip the look of selected
+      cat.classList.remove("badge-outline")
+      cat.classList.add("badge-success")
+
+      // if it's not already in list
+      // add the category to list
+      if (index == -1) {
+       categories.push(current) 
+      }
+
+      // else its already a selected category
+      // so flip the look..
+    } else {
+      cat.classList.remove("badge-success")
+      cat.classList.add("badge-outline")
+
+      // check if in (should be)
+      if (index >= 0) {
+        // remove the category
+        categories.splice(index, 1)
+      }
+    }
+    // regardless, update the list of categories
+    // and put in our hidden value input
+    catOutput.value = categories
+  })
+}
 

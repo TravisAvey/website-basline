@@ -123,6 +123,25 @@ func GetPostCategories(postID int64) ([]Category, error) {
 	return categories, nil
 }
 
+func GetPostCategoryID(categoryName string) (int64, error) {
+	var id int64
+	statement := `select id from categories where category=$1`
+	rows, err := db.Query(statement, categoryName)
+	if err != nil {
+		return 0, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&id)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return id, nil
+}
+
 func UpdatePostCategories() error {
 	// update categories set category=$2 where id=$1;
 	// statement := `update post_categories set post_id=$1 and category_id=$2;`
