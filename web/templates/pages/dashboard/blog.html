@@ -1,6 +1,10 @@
-<h2 class="m-4 text-xl text-gray-800">Number of Posts:
+<h2 class="my-4 text-xl text-gray-800">Number of Posts:
   <span hx-get="/dashboard/blog/count" hx-target="this" hx-trigger="load, every 5s"></span>
 </h2>
+<button class="btn btn-success text-white p-1 mb-4" hx-get="/dashboard/post/create" hx-target="#dashboard">
+  New Post
+</button>
+
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Posts }}
   <div id="post-{{ .Article.ID }}" class="card w-96 bg-gray-800 shadow-xl">
@@ -51,5 +55,4 @@
     </div>
   </div>
   {{ end }}
-  <button class="btn btn-success" hx-get="/dashboard/post/create" hx-target="#dashboard">New Post</button>
 </div>
