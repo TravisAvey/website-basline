@@ -1,35 +1,39 @@
-<form hx-put="/dashboard/post/update/{{ .Article.ID }}">
+<form hx-put="/dashboard/post/update/{{ .Post.Article.ID }}">
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Title
-    <input name="title" type="text" class="grow" value="{{ .Article.Title }}" />
+    <input name="title" type="text" class="grow" value="{{ .Post.Article.Title }}" />
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Post Date
-    <p class="grow">{{ .Article.PostedStr }}</p>
+    <p class="grow">{{ .Post.Article.PostedStr }}</p>
   </label>
-  {{ if .Article.DateUpdated.Valid }}
+  {{ if .Post.Article.DateUpdated.Valid }}
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Updated
-    <p class="grow">{{ .Article.UpdatedStr }}</p>
+    <p class="grow">{{ .Post.Article.UpdatedStr }}</p>
   </label>
   {{ end }}
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Slug
-    <input name="slug" type="text" class="grow" value="{{ .Article.Slug }}" />
+    <input name="slug" type="text" class="grow" value="{{ .Post.Article.Slug }}" />
   </label>
   <label name="imageURL" class="input input-bordered flex items-center gap-2 mt-4">
     Hero Image URL
-    <input name="imageURL" type="text" class="grow" value="{{ .Article.ImageURL }}" />
+    <input name="imageURL" type="text" class="grow" value="{{ .Post.Article.ImageURL }}" />
   </label>
   <label name="keywords" class="input input-bordered flex items-center gap-2 mt-4">
     Keywords
-    <input name="keywords" type="text" class="grow" value="{{ .Article.Keywords }}" />
+    <input name="keywords" type="text" class="grow" value="{{ .Post.Article.Keywords }}" />
   </label>
-  <textarea name="summary" class="textarea textarea-bordered mt-4 w-full">{{ .Article.Summary }}</textarea>
+  <textarea name="summary" class="textarea textarea-bordered mt-4 w-full">{{ .Post.Article.Summary }}</textarea>
   <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">
     Categories
-    {{ range .Categories }}
+    {{ range .AllCats }}
+    {{ if .Selected }}
+    <div class="badge badge-success badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ else }}
     <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
     {{ end }}
     <input type="hidden" id="categories-output" name="categories" value="">
   </label>

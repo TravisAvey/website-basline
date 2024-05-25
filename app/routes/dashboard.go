@@ -13,6 +13,11 @@ import (
 	"github.com/travisavey/baseline/app/database"
 )
 
+type postCats struct {
+	Category string
+	Selected bool
+}
+
 func dashboard(w http.ResponseWriter, _ *http.Request) {
 	count, err := database.GetMessageCount(true)
 	if err != nil {
@@ -150,14 +155,49 @@ func editPostView(w http.ResponseWriter, r *http.Request) {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
+	cats, err := database.GetBlogCategories()
+	if err != nil {
+		// error getting Categories
+		// TODO: log error
+		fmt.Println(err.Error())
+		return
+	}
+	data := struct {
+		Post    database.Post
+		AllCats []postCats
+	}{
+		Post:    post,
+		AllCats: checkPostCategories(cats, post.Categories),
+	}
+
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-post.html")
-	err = t.Execute(w, post)
+	err = t.Execute(w, data)
 	if err != nil {
 		// TODO: Log error
 		msg := getResponseMsg("There was an error creating the page", Error)
 		sendSSEMessage(msg)
-		w.Write([]byte(err.Error()))
+		fmt.Println(err.Error())
 	}
+}
+
+// a func just for all post categories and a flag for an active category
+func checkPostCategories(allCats, cats []database.Category) []postCats {
+	var categories []postCats
+
+	for _, cat := range allCats {
+		curCats := postCats{
+			Category: cat.Category,
+			Selected: false,
+		}
+		for _, c := range cats {
+			if c.Category == cat.Category {
+				curCats.Selected = true
+			}
+		}
+		categories = append(categories, curCats)
+	}
+
+	return categories
 }
 
 // create a post
