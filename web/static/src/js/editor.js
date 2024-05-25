@@ -125,6 +125,11 @@ class EditorController {
       autofocus: true,
       editable: true,
       injectCSS: false,
+      onCreate({ editor }) {
+        const content = document.getElementById("html-content")
+        editor.commands.setContent(content.innerHTML)
+
+      },
       onUpdate({editor}) {
         // get the id of the hidden text input
         const output = document.getElementById("editor-output")
