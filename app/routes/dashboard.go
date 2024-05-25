@@ -124,9 +124,7 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// TODO: name this something different.. this will just return the html
-// content with the post data loaded into the editorjs
-func editPost(w http.ResponseWriter, r *http.Request) {
+func editPostView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
 		msg := getResponseMsg("Something went wrong getting the post. ID parsing", Error)
@@ -152,7 +150,7 @@ func editPost(w http.ResponseWriter, r *http.Request) {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/dashboard/post.html")
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-post.html")
 	err = t.Execute(w, post)
 	if err != nil {
 		// TODO: Log error

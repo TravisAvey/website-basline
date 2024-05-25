@@ -171,5 +171,6 @@ func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error 
 
 func parseDate(time time.Time) string {
 	y, m, d := time.Date()
-	return fmt.Sprintf("%d/%d/%d", y, m, d)
+	return fmt.Sprintf("%d-%d-%d", y, m, d)
+	// return fmt.Sprintf("%d/%d/%d", y, m, d)
 }
