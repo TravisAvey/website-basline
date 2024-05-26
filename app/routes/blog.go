@@ -122,6 +122,7 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
+		fmt.Println(err.Error())
 		return
 	}
 
@@ -138,6 +139,7 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
+		fmt.Println(err.Error())
 	}
 }
 
