@@ -163,30 +163,28 @@ func NewPost(post Post) error {
 
 func UpdatePost(post Post) error {
 	article := post.Article
-	updateCategories := post.Categories
-	id := article.ID
+	id := post.Article.ID
 	statement := `update posts set title=$2, dateupdated=$3, imageurl=$4, content=$5, summary=$6, keywords=$7, slug=$8 where id=$1;`
 	_, err := db.Exec(statement, id, article.Title, pq.NullTime{Time: time.Now()}, article.ImageURL, article.Content, article.Summary, article.Keywords, article.Slug)
 	if err != nil {
 		return err
 	}
-	// TODO: update in the future? as of now just removing old categories then adding new/updated categories
+
 	categories, catErr := GetPostCategories(id)
 	if catErr != nil {
 		return catErr
 	}
-	for i := range categories {
+	for _, cat := range categories {
 
-		delErr := DeletePostCategory(id, categories[i].ID)
-		if delErr != nil {
-			return delErr
+		err = DeletePostCategory(id, cat.ID)
+		if err != nil {
+			return err
 		}
 	}
-	for i := range updateCategories {
-
-		setErr := SetPostCategory(id, updateCategories[i].ID)
-		if setErr != nil {
-			return setErr
+	for _, cat := range post.Categories {
+		err = SetPostCategory(id, cat.ID)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

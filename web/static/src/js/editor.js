@@ -282,15 +282,10 @@ function updateCategories() {
       if (index == -1) {
        categories.push(current) 
       }
-
+      catOutput.value = categories
     } 
-    // regardless, update the list of categories
-    // and put in our hidden value input
-    catOutput.value = categories
   } 
 }
-
-
 
 for (const cat of cats.children) {
   cat.addEventListener("click", event => {

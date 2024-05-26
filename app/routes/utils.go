@@ -54,7 +54,6 @@ func parsePostForm(r *http.Request) (database.Post, error) {
 	if err != nil {
 		return database.Post{}, err
 	}
-	fmt.Println(r.Form)
 
 	categories, err := parsePostCategories(r)
 	if err != nil {
