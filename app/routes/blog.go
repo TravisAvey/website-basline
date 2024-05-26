@@ -126,9 +126,6 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// errors updating:
-	// pq: insert or update on table "post_categories" violates foreign key constraint "post_categories_post_id_fkey"
-	// Thought I had this working before...
 	err = database.UpdatePost(post)
 	if err != nil {
 		msg := errMsg{

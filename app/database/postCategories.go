@@ -143,7 +143,6 @@ func GetPostCategoryID(categoryName string) (int64, error) {
 }
 
 func UpdatePostCategories(postID, categoryID int64) error {
-	// update categories set category=$2 where id=$1;
 	statement := `update post_categories set post_id=$1 and category_id=$2;`
 	_, err := db.Exec(statement, postID, categoryID)
 	return err
