@@ -26,7 +26,7 @@ func GetPostCount() (uint64, error) {
 
 func GetAllPosts() ([]Post, error) {
 	var posts []Post
-	statement := `select id, title, imageurl, summary, keywords, content, slug, dateposted, dateupdated from posts;`
+	statement := `select id, title, imageurl, summary, keywords, content, slug, dateposted, dateupdated, updated from posts;`
 	rows, err := db.Query(statement)
 	if err != nil {
 		return []Post{}, err
@@ -36,7 +36,8 @@ func GetAllPosts() ([]Post, error) {
 		var title, imageUrl, summary, keywords, content, slug string
 		var articleID int64
 		var datePosted, dateUpdated pq.NullTime
-		err = rows.Scan(&articleID, &title, &imageUrl, &summary, &keywords, &content, &slug, &datePosted, &dateUpdated)
+		var updated bool
+		err = rows.Scan(&articleID, &title, &imageUrl, &summary, &keywords, &content, &slug, &datePosted, &dateUpdated, &updated)
 		if err != nil {
 			return []Post{}, err
 		}
@@ -51,6 +52,7 @@ func GetAllPosts() ([]Post, error) {
 			Slug:        slug,
 			DatePosted:  datePosted,
 			DateUpdated: dateUpdated,
+			Updated:     updated,
 		}
 		categories, caterr := GetPostCategories(articleID)
 		if caterr != nil {
@@ -67,7 +69,7 @@ func GetAllPosts() ([]Post, error) {
 
 func GetPostByID(id int64) (Post, error) {
 	var article Article
-	statement := `select title, summary, slug, imageurl, keywords, dateupdated, dateposted, content from posts where id = $1;`
+	statement := `select title, summary, slug, imageurl, keywords, dateupdated, dateposted, content, updated from posts where id = $1;`
 	article.ID = id
 	row, err := db.Query(statement, id)
 	if err != nil {
@@ -77,7 +79,7 @@ func GetPostByID(id int64) (Post, error) {
 	count := 0
 	for row.Next() {
 		count++
-		err := row.Scan(&article.Title, &article.Summary, &article.Slug, &article.ImageURL, &article.Keywords, &article.DateUpdated, &article.DatePosted, &article.Content)
+		err := row.Scan(&article.Title, &article.Summary, &article.Slug, &article.ImageURL, &article.Keywords, &article.DateUpdated, &article.DatePosted, &article.Content, &article.Updated)
 		if err != nil {
 			return Post{}, err
 		}
@@ -98,7 +100,7 @@ func GetPostByID(id int64) (Post, error) {
 }
 
 func GetPostBySlug(slug string) (Post, error) {
-	statement := `select id, title, summary, imageurl, keywords, dateposted, dateupdated, content from posts where slug = $1`
+	statement := `select id, title, summary, imageurl, keywords, dateposted, dateupdated, content, updated from posts where slug = $1`
 	var article Article
 	article.Slug = slug
 	row, err := db.Query(statement, slug)
@@ -108,7 +110,7 @@ func GetPostBySlug(slug string) (Post, error) {
 	defer row.Close()
 
 	for row.Next() {
-		err := row.Scan(&article.ID, &article.Title, &article.Summary, &article.ImageURL, &article.Keywords, &article.DatePosted, &article.DateUpdated, &article.Content)
+		err := row.Scan(&article.ID, &article.Title, &article.Summary, &article.ImageURL, &article.Keywords, &article.DatePosted, &article.DateUpdated, &article.Content, &article.Updated)
 		if err != nil {
 			return Post{}, err
 		}
@@ -146,7 +148,7 @@ func NewPost(post Post) error {
 	article := post.Article
 	category := post.Categories
 	postStatement := `
-	with article as (insert into posts (title, dateposted, imageurl, content, summary, keywords, slug) values ($1, $2, $3, $4, $5, $6, $7) returning id) 
+	with article as (insert into posts (title, dateposted, imageurl, content, summary, keywords, slug, updated) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id) 
 	insert into post_categories(post_id, category_id) values
 	`
 	for i := 0; i < len(category); i++ {
@@ -157,36 +159,34 @@ func NewPost(post Post) error {
 			postStatement += ","
 		}
 	}
-	_, err := db.Exec(postStatement, article.Title, time.Now(), article.ImageURL, article.Content, article.Summary, article.Keywords, article.Slug)
+	_, err := db.Exec(postStatement, article.Title, time.Now(), article.ImageURL, article.Content, article.Summary, article.Keywords, article.Slug, false)
 	return err
 }
 
 func UpdatePost(post Post) error {
 	article := post.Article
-	updateCategories := post.Categories
-	id := article.ID
-	statement := `update posts set title=$2, dateupdated=$3, imageurl=$4, content=$5, summary=$6, keywords=$7, slug=$8 where id=$1;`
-	_, err := db.Exec(statement, id, article.Title, pq.NullTime{Time: time.Now()}, article.ImageURL, article.Content, article.Summary, article.Keywords, article.Slug)
+	id := post.Article.ID
+	statement := `update posts set title=$2, dateupdated=$3, imageurl=$4, content=$5, summary=$6, keywords=$7, slug=$8, updated=$9 where id=$1;`
+	_, err := db.Exec(statement, id, article.Title, time.Now(), article.ImageURL, article.Content, article.Summary, article.Keywords, article.Slug, article.Updated)
 	if err != nil {
 		return err
 	}
-	// TODO: update in the future? as of now just removing old categories then adding new/updated categories
+
 	categories, catErr := GetPostCategories(id)
 	if catErr != nil {
 		return catErr
 	}
-	for i := range categories {
+	for _, cat := range categories {
 
-		delErr := DeletePostCategory(id, categories[i].ID)
-		if delErr != nil {
-			return delErr
+		err = DeletePostCategory(id, cat.ID)
+		if err != nil {
+			return err
 		}
 	}
-	for i := range updateCategories {
-
-		setErr := SetPostCategory(id, updateCategories[i].ID)
-		if setErr != nil {
-			return setErr
+	for _, cat := range post.Categories {
+		err = SetPostCategory(id, cat.ID)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

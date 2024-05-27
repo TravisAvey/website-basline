@@ -13,6 +13,11 @@ import (
 	"github.com/travisavey/baseline/app/database"
 )
 
+type postCats struct {
+	Category string
+	Selected bool
+}
+
 func dashboard(w http.ResponseWriter, _ *http.Request) {
 	count, err := database.GetMessageCount(true)
 	if err != nil {
@@ -51,7 +56,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 
 	for i := range posts {
 		posts[i].Article.PostedStr = parseDate(posts[i].Article.DatePosted.Time)
-		if posts[i].Article.DateUpdated.Valid {
+		if posts[i].Article.Updated {
 			posts[i].Article.UpdatedStr = parseDate(posts[i].Article.DateUpdated.Time)
 		}
 	}
@@ -110,7 +115,7 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
-	if post.Article.DateUpdated.Valid {
+	if post.Article.Updated {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
@@ -124,9 +129,7 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// TODO: name this something different.. this will just return the html
-// content with the post data loaded into the editorjs
-func editPost(w http.ResponseWriter, r *http.Request) {
+func editPostView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
 		msg := getResponseMsg("Something went wrong getting the post. ID parsing", Error)
@@ -148,18 +151,53 @@ func editPost(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
-	if post.Article.DateUpdated.Valid {
+	if post.Article.Updated {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
-	t, _ := template.ParseFiles("web/templates/pages/dashboard/post.html")
-	err = t.Execute(w, post)
+	cats, err := database.GetBlogCategories()
+	if err != nil {
+		// error getting Categories
+		// TODO: log error
+		fmt.Println(err.Error())
+		return
+	}
+	data := struct {
+		AllCats []postCats
+		Post    database.Post
+	}{
+		Post:    post,
+		AllCats: checkPostCategories(cats, post.Categories),
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-post.html")
+	err = t.Execute(w, data)
 	if err != nil {
 		// TODO: Log error
 		msg := getResponseMsg("There was an error creating the page", Error)
 		sendSSEMessage(msg)
-		w.Write([]byte(err.Error()))
+		fmt.Println(err.Error())
 	}
+}
+
+// a func just for all post categories and a flag for an active category
+func checkPostCategories(allCats, cats []database.Category) []postCats {
+	var categories []postCats
+
+	for _, cat := range allCats {
+		curCats := postCats{
+			Category: cat.Category,
+			Selected: false,
+		}
+		for _, c := range cats {
+			if c.Category == cat.Category {
+				curCats.Selected = true
+			}
+		}
+		categories = append(categories, curCats)
+	}
+
+	return categories
 }
 
 // create a post

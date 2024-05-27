@@ -59,9 +59,14 @@ func parsePostForm(r *http.Request) (database.Post, error) {
 	if err != nil {
 		return database.Post{}, err
 	}
+	id, err := strconv.ParseInt(r.FormValue("post-id"), 10, 64)
+	if err != nil {
+		return database.Post{}, err
+	}
 	post := database.Post{
 		Article: database.Article{
 			Title:    r.FormValue("title"),
+			ID:       id,
 			ImageURL: r.FormValue("imageURL"),
 			Summary:  r.FormValue("summary"),
 			Content:  r.FormValue("content"),
@@ -171,5 +176,6 @@ func sendResponseMsg(msg string, res ResponseType, w http.ResponseWriter) error 
 
 func parseDate(time time.Time) string {
 	y, m, d := time.Date()
-	return fmt.Sprintf("%d/%d/%d", y, m, d)
+	return fmt.Sprintf("%d-%d-%d", y, m, d)
+	// return fmt.Sprintf("%d/%d/%d", y, m, d)
 }

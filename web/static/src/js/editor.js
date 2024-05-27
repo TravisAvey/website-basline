@@ -125,6 +125,16 @@ class EditorController {
       autofocus: true,
       editable: true,
       injectCSS: false,
+      onCreate({ editor }) {
+        const content = document.getElementById("html-content")
+        editor.commands.setContent(content.innerHTML)
+
+        const output = document.getElementById("editor-output")
+        output.value = editor.getHTML()
+
+        updateCategories()
+
+      },
       onUpdate({editor}) {
         // get the id of the hidden text input
         const output = document.getElementById("editor-output")
@@ -259,6 +269,23 @@ const cats = document.getElementById("categories")
 var catOutput = document.getElementById("categories-output")
 // a list to keep track of all our categories
 var categories = []
+
+function updateCategories() {
+  for (const cat of cats.children) {
+    // get current category and index
+    const current = cat.innerText
+    const index = categories.indexOf(current)
+
+    if (cat.classList.contains("badge-success")) {
+      // if it's not already in list
+      // add the category to list
+      if (index == -1) {
+       categories.push(current) 
+      }
+      catOutput.value = categories
+    } 
+  } 
+}
 
 for (const cat of cats.children) {
   cat.addEventListener("click", event => {

@@ -1,8 +1,145 @@
-<script src="/dist/js/editor.js" type="module" defer></script>
+<form hx-put="/dashboard/post/edit/{{ .Post.Article.ID }}">
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Title
+    <input name="title" type="text" class="grow" value="{{ .Post.Article.Title }}" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    ID
+    <input name="post-id" type="text" class="grow" value="{{ .Post.Article.ID }}" readonly />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Post Date
+    <!--<input name="postDate" type="date" class="grow" value="{{ .Post.Article.PostedStr }}" />-->
+    <p class="grow">{{ .Post.Article.PostedStr }}</p>
+  </label>
+  {{ if .Post.Article.Updated }}
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Updated
+    <p class="grow">{{ .Post.Article.UpdatedStr }}</p>
+  </label>
+  {{ end }}
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Slug
+    <input name="slug" type="text" class="grow" value="{{ .Post.Article.Slug }}" />
+  </label>
+  <label name="imageURL" class="input input-bordered flex items-center gap-2 mt-4">
+    Hero Image URL
+    <input name="imageURL" type="text" class="grow" value="{{ .Post.Article.ImageURL }}" />
+  </label>
+  <label name="keywords" class="input input-bordered flex items-center gap-2 mt-4">
+    Keywords
+    <input name="keywords" type="text" class="grow" value="{{ .Post.Article.Keywords }}" />
+  </label>
+  <textarea name="summary" class="textarea textarea-bordered mt-4 w-full">{{ .Post.Article.Summary }}</textarea>
+  <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">
+    Categories
+    {{ range .AllCats }}
+    {{ if .Selected }}
+    <div class="badge badge-success badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ else }}
+    <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
+    {{ end }}
+    <input type="hidden" id="categories-output" name="categories" value="">
+  </label>
 
-<section class="text-gray-800">
-  <h2 class="text-xl font-bold">Edit Post</h2>
-  <div id="editor">
-
+  <div class="my-4">
+    <button type="button" class="btn btn-error text-white">Cancel</button>
+    <button type="submit" class="btn btn-warning text-white">Update</button>
   </div>
-</section>
+  <section class="text-gray-800">
+    <h2 class="text-xl font-bold">Write Your Epic Post</h2>
+
+    <div class="mt-8" data-text-editor="editor">
+      <div class="flex items-center space-x-6">
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-heading-1>
+            <i class="fa-solid fa-heading"></i><span class="text-sm font-bold">1</span>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-heading-2>
+            <i class="fa-solid fa-heading"></i><span class="text-sm font-bold">2</span>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-heading-3>
+            <i class="fa-solid fa-heading"></i><span class="text-sm font-bold">3</span>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-bold>
+            <i class="fa-solid fa-bold"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-italic>
+            <i class="fa-solid fa-italic"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-strike>
+            <i class="fa-solid fa-strikethrough"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-underline>
+            <i class="fa-solid fa-underline"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-highlight>
+            <i class="fa-solid fa-highlighter"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-bulletList>
+            <i class="fa-solid fa-list-ul"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-orderedList>
+            <i class="fa-solid fa-list-ol"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-alignLeft>
+            <i class="fa-solid fa-align-left"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-alignCenter>
+            <i class="fa-solid fa-align-center"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white"
+            data-alignRight>
+            <i class="fa-solid fa-align-right"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-quote>
+            <i class="fa-solid fa-quote-left"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-link>
+            <i class="fa-solid fa-link"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-image>
+            <i class="fa-solid fa-image"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-undo>
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button type="button" class="px-2 py-1 border border-gray-300 rounded-lg text-gray-900 bg-white" data-redo>
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mt-2 px-3 py-2 border border-gray-300 rounded" data-editor></div>
+      <div id="html-content" hidden>
+        {{ .Post.Article.HTML }}
+      </div>
+      <input type="hidden" id="editor-output" name="content" value="">
+    </div>
+  </section>
+</form>
+
+<script src="/dist/js/editor.js" type="module" defer></script>
