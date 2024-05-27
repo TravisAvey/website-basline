@@ -56,7 +56,7 @@ func dashboardPosts(w http.ResponseWriter, _ *http.Request) {
 
 	for i := range posts {
 		posts[i].Article.PostedStr = parseDate(posts[i].Article.DatePosted.Time)
-		if posts[i].Article.DateUpdated.Valid {
+		if posts[i].Article.Updated {
 			posts[i].Article.UpdatedStr = parseDate(posts[i].Article.DateUpdated.Time)
 		}
 	}
@@ -115,7 +115,7 @@ func getPostByID(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
-	if post.Article.DateUpdated.Valid {
+	if post.Article.Updated {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
@@ -151,7 +151,7 @@ func editPostView(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
-	if post.Article.DateUpdated.Valid {
+	if post.Article.Updated {
 		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
 	}
 
@@ -163,8 +163,8 @@ func editPostView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := struct {
-		Post    database.Post
 		AllCats []postCats
+		Post    database.Post
 	}{
 		Post:    post,
 		AllCats: checkPostCategories(cats, post.Categories),

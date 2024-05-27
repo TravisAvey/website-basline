@@ -3,6 +3,7 @@ create table posts (
   title varchar(64),
   dateposted date,
   dateupdated date,
+  updated boolean,
   imageurl varchar(128),
   content text,
   summary text,
@@ -71,12 +72,12 @@ insert into users(name, email, password) values
   ('Dwight Schrute','thebest@dunder.com','bearsbeatsbattlestar'),
   ('Michael Scott','bestboss@dunder.com','thatswhatshesaid');
 
-insert into posts(title, dateposted, dateupdated, imageurl, content, summary, keywords, slug)
+insert into posts(title, dateposted, dateupdated, imageurl, content, summary, keywords, slug, updated)
 values
-  ('Hello World','2023-11-23',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>Hello World</h3>','Hello World','hello world','hello-world'),
-  ('The Second Post','2023-12-07',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A Post</h3>','This is a post','test','second-post'),
-  ('The Post','2023-12-14',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>The Post</h3>','The third post','test','more-tests'),
-  ('Lets Have another Post','2024-01-14','2024-02-24',E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A simple test, hmmm</h3>','May the Forth test - test','test','another-test');
+  ('Hello World','2023-11-23',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>Hello World</h3>','Hello World','hello world','hello-world', false),
+  ('The Second Post','2023-12-07',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A Post</h3>','This is a post','test','second-post', false),
+  ('The Post','2023-12-14',NULL,E'https://imgur.com/uzdpuEJ.jpg',E'<h3>The Post</h3>','The third post','test','more-tests', false),
+  ('Lets Have another Post','2024-01-14','2024-02-24',E'https://imgur.com/uzdpuEJ.jpg',E'<h3>A simple test, hmmm</h3>','May the Forth test - test','test','another-test', false);
 
 insert into categories(category) values
   ('general'),

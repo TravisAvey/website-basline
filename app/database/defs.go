@@ -31,6 +31,7 @@ type Article struct {
 	UpdatedStr  string        `json:"updatedStr"`
 	DatePosted  pq.NullTime   `json:"datePosted"`
 	DateUpdated pq.NullTime   `json:"dateUpdated"`
+	Updated     bool          `json:"updated"`
 	ID          int64         `json:"id"`
 }
 
@@ -42,8 +43,8 @@ type Category struct {
 
 // Post the article and categories
 type Post struct {
-	Article    Article    `json:"article"`
 	Categories []Category `json:"categories"`
+	Article    Article    `json:"article"`
 }
 
 // /////////////////////////////////////////////////////////////////

@@ -20,7 +20,7 @@
           {{ .Article.PostedStr }}
         </span>
       </p>
-      {{ if .Article.UpdatedStr }}
+      {{ if .Article.Updated }}
       <p class="mb-1 text-gray-300 font-extralight">
         Updated:
         <span class="text-orange-300 font-normal" x-data="{ date: new Date(Date.parse($el.innerText)).toDateString() }"

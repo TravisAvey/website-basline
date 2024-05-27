@@ -9,9 +9,10 @@
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Post Date
+    <!--<input name="postDate" type="date" class="grow" value="{{ .Post.Article.PostedStr }}" />-->
     <p class="grow">{{ .Post.Article.PostedStr }}</p>
   </label>
-  {{ if .Post.Article.DateUpdated.Valid }}
+  {{ if .Post.Article.Updated }}
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Updated
     <p class="grow">{{ .Post.Article.UpdatedStr }}</p>

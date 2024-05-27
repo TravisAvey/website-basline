@@ -21,6 +21,7 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: log error
+		fmt.Println(err.Error())
 		return
 	}
 
@@ -54,7 +55,7 @@ func blog(w http.ResponseWriter, _ *http.Request) {
 	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		// TODO: Log error
-		w.Write([]byte(err.Error()))
+		fmt.Println(err.Error())
 	}
 }
 
@@ -78,6 +79,9 @@ func getPostBySlug(w http.ResponseWriter, r *http.Request) {
 	post.Article.HTML = template.HTML(content)
 
 	post.Article.PostedStr = parseDate(post.Article.DatePosted.Time)
+	if post.Article.Updated {
+		post.Article.UpdatedStr = parseDate(post.Article.DateUpdated.Time)
+	}
 
 	files := getBaseTemplates()
 	files = append(files, "web/templates/pages/blog/post.html")
@@ -126,6 +130,7 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	post.Article.Updated = true
 	err = database.UpdatePost(post)
 	if err != nil {
 		msg := errMsg{
