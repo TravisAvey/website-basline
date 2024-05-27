@@ -6,7 +6,8 @@
     "watch": "tailwindcss build -i ./src/css/input.css -o ../dist/css/style.css --watch",
     "alpine": "npx esbuild ./src/js/index.js --outfile=../dist/js/index.js --bundle --minify",
     "scripts": "npx esbuild ./src/js/script.js --outfile=../dist/js/script.js",
-    "editor": "npx esbuild ./src/js/editor.js --bundle --outfile=../dist/js/editor.js"
+    "editor": "npx esbuild ./src/js/editor.js --bundle --outfile=../dist/js/editor.js",
+    "gallery": "npx esbuild ./src/js/gallery.js --bundle --outfile=../dist/js/gallery.js"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",

@@ -49,6 +49,26 @@ func parsePostCategories(r *http.Request) ([]database.Category, error) {
 	return categories, nil
 }
 
+func parseImageCategories(r *http.Request) ([]database.ImageCategory, error) {
+	var categories []database.ImageCategory
+
+	strCats := strings.Split(r.FormValue("categories"), ",")
+
+	for _, cat := range strCats {
+		id, err := database.GetGalleryCategoryID(cat)
+		if err != nil {
+			return categories, err
+		}
+		category := database.ImageCategory{
+			Category: cat,
+			ID:       id,
+		}
+		categories = append(categories, category)
+	}
+
+	return categories, nil
+}
+
 func parsePostForm(r *http.Request) (database.Post, error) {
 	err := r.ParseForm()
 	if err != nil {
@@ -85,28 +105,25 @@ func parseImageData(r *http.Request) (database.Image, error) {
 		return database.Image{}, err
 	}
 
-	isGallery, err := strconv.ParseBool(r.FormValue("isGallery"))
+	isGallery, err := strconv.ParseBool(r.FormValue("is-gallery"))
 	if err != nil {
 		return database.Image{}, err
 	}
 
-	catID, err := strconv.ParseUint(r.FormValue("categoryId"), 10, 64)
+	categories, err := parseImageCategories(r)
 	if err != nil {
 		return database.Image{}, err
 	}
 
 	image := database.Image{
 		Image: database.Photo{
-			ImageURL:  r.FormValue("imageURL"),
+			// TODO: get after we upload to S3...
+			// ImageURL:  r.FormValue("imageURL"),
 			Title:     r.FormValue("title"),
-			Summary:   r.FormValue("summary"),
+			Summary:   r.FormValue("description"),
 			IsGallery: isGallery,
 		},
-		Categories: []database.ImageCategory{
-			{
-				ID: catID,
-			},
-		},
+		Categories: categories,
 	}
 
 	return image, nil

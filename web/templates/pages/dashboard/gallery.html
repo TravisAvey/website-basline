@@ -1,4 +1,7 @@
 <h2 class="m-4 text-xl text-gray-800">Number of Images: {{ .NumImages }}</h2>
+<button class="btn btn-success text-white p-1 mb-4" hx-get="/dashboard/gallery/create" hx-target="#dashboard">
+  New Image
+</button>
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Images }}
   <div class="card w-96 bg-gray-800 shadow-xl">

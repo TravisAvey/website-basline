@@ -70,10 +70,12 @@ func SendImage(fileLocation string, image string) error {
 		return fileErr
 	}
 	object := s3.PutObjectInput{
+		// bucket is space name
 		Bucket: aws.String(s3Storage.Bucket),
-		Key:    aws.String(image),
-		Body:   file,
-		ACL:    aws.String("public-read"),
+		// key is folder/filename.ext
+		Key:  aws.String(image),
+		Body: file,
+		ACL:  aws.String("public-read"),
 	}
 	_, err := s3Client.PutObject(&object)
 	if err != nil {

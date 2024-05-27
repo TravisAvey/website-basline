@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -24,6 +25,30 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+func createImageView(w http.ResponseWriter, _ *http.Request) {
+	cats, err := database.GetGalleryCategories()
+	if err != nil {
+		msg := getResponseMsg("Failed to get the images", Error)
+		sendSSEMessage(msg)
+		// TODO: log error
+		return
+	}
+	data := struct {
+		Categories []database.ImageCategory
+	}{
+		Categories: cats,
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/new-image.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		// TODO: Log error
+		msg := getResponseMsg("There was an error creating the page", Error)
+		sendSSEMessage(msg)
+		w.Write([]byte(err.Error()))
+	}
+}
+
 // upload/create a image
 func newImage(w http.ResponseWriter, r *http.Request) {
 	image, err := parseImageData(r)
@@ -36,7 +61,7 @@ func newImage(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
-		w.Write([]byte(err.Error()))
+		fmt.Println(err.Error())
 	}
 
 	err = database.CreateImage(image)
@@ -49,7 +74,7 @@ func newImage(w http.ResponseWriter, r *http.Request) {
 		}
 		sendErrorTemplate(msg, w)
 		// TODO: Log error
-		w.Write([]byte(err.Error()))
+		fmt.Println(err.Error())
 	}
 }
 

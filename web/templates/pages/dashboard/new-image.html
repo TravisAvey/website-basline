@@ -1,0 +1,30 @@
+<h1 class="text-xl">Upload New Image</h1>
+<form hx-post="/dashboard/gallery/new">
+  <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs grow" />
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Title
+    <input name="title" type="text" class="grow" placeholder="Image Title" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Description
+    <input name="description" type="text" class="grow" placeholder="Image Alt Description" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    For Gallery
+    <select name="is-gallery" class="select select-md select-primary">
+      <option disabled selected>Pick One</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  </label>
+  <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">
+    Categories
+    {{ range .Categories }}
+    <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
+    <input type="hidden" id="categories-output" name="categories" value="">
+  </label>
+  <input type="submit" class="btn btn-success text-white font-bold mt-4" value="Upload">
+</form>
+
+<script src="/dist/js/gallery.js" type="module" defer></script>
