@@ -1,6 +1,6 @@
 <h1 class="text-xl">Upload New Image</h1>
-<form hx-post="/dashboard/gallery/new">
-  <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs grow" />
+<form hx-post="/dashboard/gallery/new" enctype="multipart/form-data">
+  <input type="file" name="image" class="file-input file-input-bordered file-input-primary w-full max-w-xs grow" />
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Title
     <input name="title" type="text" class="grow" placeholder="Image Title" />

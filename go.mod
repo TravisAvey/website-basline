@@ -16,6 +16,7 @@ require (
 
 require (
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/gwpp/tinify-go v0.0.0-20170613055357-77b9df15f343 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/nedpals/postgrest-go v0.1.3 // indirect
 )

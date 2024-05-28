@@ -51,30 +51,47 @@ func createImageView(w http.ResponseWriter, _ *http.Request) {
 
 // upload/create a image
 func newImage(w http.ResponseWriter, r *http.Request) {
-	image, err := parseImageData(r)
+	r.ParseMultipartForm(64 << 20)
+	_, header, err := r.FormFile("image")
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
-		// TODO: Log error
-		fmt.Println(err.Error())
+		// TODO: log error
+		// TODO: send sendSSEMessage
+		fmt.Println("r.FormFile err:", err.Error())
+		return
+	}
+	fmt.Println(header.Filename)
+
+	isGallery, err := strconv.ParseBool(r.FormValue("is-gallery"))
+	if err != nil {
+		// TODO: log error
+		// TODO: send sendSSEMessage
+		fmt.Println("ParseBool err:", err.Error())
+		return
+	}
+
+	categories, err := parseImageCategories(r)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sendSSEMessage
+		fmt.Println("parseImageCategories err:", err.Error())
+		return
+	}
+
+	image := database.Image{
+		Image: database.Photo{
+			// TODO: get after we upload to S3...
+			// ImageURL:  r.FormValue("imageURL"),
+			Title:     r.FormValue("title"),
+			Summary:   r.FormValue("description"),
+			IsGallery: isGallery,
+		},
+		Categories: categories,
 	}
 
 	err = database.CreateImage(image)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end--Unable to create the image",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
 		// TODO: Log error
-		fmt.Println(err.Error())
+		fmt.Println("createImage err:", err.Error())
 	}
 }
 
