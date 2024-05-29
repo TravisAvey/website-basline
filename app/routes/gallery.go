@@ -3,11 +3,14 @@ package routes
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/travisavey/baseline/app/database"
+	"github.com/travisavey/baseline/app/services"
 )
 
 func gallery(w http.ResponseWriter, _ *http.Request) {
@@ -77,10 +80,55 @@ func newImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	file, header, err := r.FormFile("image")
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("FormFile error:", err.Error())
+		return
+	}
+
+	defer file.Close()
+	filename := header.Filename
+	tmpImg := fmt.Sprintf("./temp/uncmp-%v", filename)
+	output := fmt.Sprintf("./temp/%v", filename)
+
+	out, err := os.Create(tmpImg)
+	if err != nil {
+		fmt.Println("create tempImg error:", err.Error())
+		// TODO: log error
+		// TODO: send sse msg
+		return
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, file)
+	if err != nil {
+		fmt.Println("Copy file error:", err.Error())
+		// TODO: log error
+		// TODO: send sse msg
+		return
+	}
+
+	err = services.CompressImage(tmpImg, output)
+	if err != nil {
+		fmt.Println("CompressImage err:", err.Error())
+		// TODO: log error
+		// TODO: send sse msg
+		return
+	}
+
+	err = services.SendImage(output, filename)
+	if err != nil {
+		fmt.Println("SendImage err:", err.Error())
+		// TODO: log error
+		// TODO: send sse msg
+		return
+	}
+
 	image := database.Image{
 		Image: database.Photo{
-			// TODO: get after we upload to S3...
-			// ImageURL:  r.FormValue("imageURL"),
+			ImageURL:  services.GetS3Url() + "/" + filename,
 			Title:     r.FormValue("title"),
 			Summary:   r.FormValue("description"),
 			IsGallery: isGallery,
@@ -91,6 +139,7 @@ func newImage(w http.ResponseWriter, r *http.Request) {
 	err = database.CreateImage(image)
 	if err != nil {
 		// TODO: Log error
+		// TODO: send sse msg
 		fmt.Println("createImage err:", err.Error())
 	}
 }

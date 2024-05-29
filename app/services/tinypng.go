@@ -19,11 +19,12 @@ func InitTinify() {
 	}
 
 	apiKey = os.Getenv("TINYPNG_KEY")
-	Tinify.SetKey(apiKey)
+	fmt.Println("apiKey", apiKey)
 }
 
 // CompressImage compresses an image (file - location of image)
 func CompressImage(file string, destination string) error {
+	Tinify.SetKey(apiKey)
 	source, err := Tinify.FromFile(file)
 	if err != nil {
 		return err

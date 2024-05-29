@@ -21,6 +21,7 @@ func main() {
 	}
 
 	services.InitS3Storage()
+	services.InitTinify()
 
 	routes.Setup()
 }

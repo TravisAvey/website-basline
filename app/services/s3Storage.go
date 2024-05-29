@@ -35,16 +35,18 @@ func InitS3Storage() {
 		fmt.Printf("Error loading the environment file: %v\n", err)
 	}
 	// store the env vars
-	s3Storage.Key = os.Getenv("S3_ACCESS_KEY")
-	s3Storage.Secret = os.Getenv("S3_PRIVATE_KEY")
+	s3Storage.Key = os.Getenv("S3_ACCESS_TOKEN")
+	s3Storage.Secret = os.Getenv("S3_SECRET")
 	s3Storage.Endpoint = os.Getenv("S3_ENDPOINT")
 	s3Storage.Bucket = os.Getenv("S3_BUCKET")
 	s3Storage.Url = os.Getenv("S3_URL")
 
+	fmt.Println(s3Storage)
+
 	// init the aws-sdk
 	s3Config := &aws.Config{
 		Credentials: credentials.NewStaticCredentials(s3Storage.Key, s3Storage.Secret, ""),
-		Endpoint:    aws.String(s3Storage.Endpoint),
+		Endpoint:    aws.String("https://nyc3.digitaloceanspaces.com"),
 		Region:      aws.String("us-east-1"),
 	}
 
