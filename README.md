@@ -12,3 +12,5 @@ to look inside and take a peak:
 `
 podman exec -it psql psql -U psqluser -d web
 `
+## temp/ 
+Manually created this directory.  Image upload, creating temp files here, may not work?  Need to test.
