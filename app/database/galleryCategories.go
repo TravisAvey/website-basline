@@ -59,6 +59,25 @@ func GetGalleryCategory(id uint64) (ImageCategory, error) {
 	return category, err
 }
 
+func GetGalleryCategoryID(category string) (uint64, error) {
+	var id uint64
+	statement := `select id from photo_categories where category=$1`
+	rows, err := db.Query(statement, category)
+	if err != nil {
+		return 0, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&id)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return id, nil
+}
+
 func UpdateGalleryCategory(category ImageCategory) error {
 	statement := `update photo_categories set category=$2 where id=$1;`
 	_, err := db.Exec(statement, category.ID, category.Category)

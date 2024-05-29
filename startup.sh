@@ -8,6 +8,7 @@ npm run build
 npm run alpine
 npm run scripts
 npm run editor
+npm run gallery
 popd
 
 go run cmd/main.go

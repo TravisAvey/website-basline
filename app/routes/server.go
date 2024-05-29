@@ -24,7 +24,6 @@ func Setup() {
 	router.HandleFunc("/blog/posts", getPosts).Methods("GET")
 	router.HandleFunc("/blog/categories", getPosts).Methods("GET")
 	router.HandleFunc("/gallery", getImages).Methods("GET")
-	router.HandleFunc("/gallery/new", newImage).Methods("POST")
 	router.HandleFunc("/gallery/{id}", getImage).Methods("GET")
 	router.HandleFunc("/gallery/{id}", updateImage).Methods("PUT")
 	router.HandleFunc("/gallery/{id}", deleteImage).Methods("DELETE")
@@ -45,6 +44,9 @@ func Setup() {
 	router.HandleFunc("/dashboard/post/create", authMiddleware(newPost)).Methods("GET")
 	router.HandleFunc("/dashboard/blog/count", authMiddleware(dashboardPostCount)).Methods("GET")
 	router.HandleFunc("/dashboard/gallery", authMiddleware(dashboardGallery)).Methods("GET")
+	router.HandleFunc("/dashboard/gallery/create", authMiddleware(createImageView)).Methods("GET")
+	router.HandleFunc("/dashboard/gallery/new", authMiddleware(newImage)).Methods("POST")
+
 	router.HandleFunc("/dashboard/messages", authMiddleware(getMessages)).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", authMiddleware(getMessage)).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", authMiddleware(messageRead)).Methods("PUT")
