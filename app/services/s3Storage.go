@@ -33,6 +33,8 @@ func InitS3Storage() {
 	err := godotenv.Load("config/.env")
 	if err != nil {
 		fmt.Printf("Error loading the environment file: %v\n", err)
+		// TODO: log error
+		// should we panic.. or set flag that s3 storage not up.
 	}
 	// store the env vars
 	s3Storage.Key = os.Getenv("S3_ACCESS_TOKEN")
@@ -40,8 +42,6 @@ func InitS3Storage() {
 	s3Storage.Endpoint = os.Getenv("S3_ENDPOINT")
 	s3Storage.Bucket = os.Getenv("S3_BUCKET")
 	s3Storage.Url = os.Getenv("S3_URL")
-
-	fmt.Println(s3Storage)
 
 	// init the aws-sdk
 	s3Config := &aws.Config{
