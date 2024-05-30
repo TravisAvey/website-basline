@@ -249,6 +249,49 @@ func updateImage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func updateImageView(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("ParseUint error:", err.Error())
+		return
+	}
+
+	var img database.Image
+	img, err = database.GetImage(id)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("GetImage error:", err.Error())
+		return
+	}
+
+	cats, err := database.GetGalleryCategories()
+	if err != nil {
+		msg := getResponseMsg("Failed to get the images", Error)
+		sendSSEMessage(msg)
+		// TODO: log error
+		return
+	}
+
+	data := struct {
+		Categories []database.ImageCategory
+		Image      database.Photo
+	}{
+		Image:      img.Image,
+		Categories: cats,
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-image.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("ParseFiles error:", err.Error())
+	}
+}
+
 // delete a image
 func deleteImage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)

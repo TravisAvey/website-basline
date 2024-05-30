@@ -19,7 +19,6 @@ func InitTinify() {
 	}
 
 	apiKey = os.Getenv("TINYPNG_KEY")
-	fmt.Println("apiKey", apiKey)
 }
 
 // CompressImage compresses an image (file - location of image)
