@@ -1,8 +1,14 @@
 <h1 class="text-xl">Edit Image</h1>
-<form hx-put="/dashboard/gallery/{{ .Image.ID }}" enctype="multipart/form-data">
+<form x-data="{}" hx-put="/dashboard/gallery/{{ .Image.ID }}" enctype="multipart/form-data">
+  <div $nextTick(()=> { updateCategories() })></div>
+  <img class="max-w-xl" src="{{ .Image.ImageURL }}">
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Title
     <input name="title" type="text" class="grow" value="{{ .Image.Title }}" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    URL
+    <input name="title" type="text" class="grow" value="{{ .Image.ImageURL }}" />
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
     Description
@@ -19,11 +25,15 @@
   <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">
     Categories
     {{ range .Categories }}
+    {{ if .Selected }}
+    <div class="badge badge-success badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ else }}
     <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
     {{ end }}
     <input type="hidden" id="categories-output" name="categories" value="">
   </label>
-  <input type="submit" class="btn btn-success text-white font-bold mt-4" value="Upload">
+  <input type="submit" class="btn btn-success text-white font-bold mt-4" value="Update">
 </form>
 
 <script src="/dist/js/gallery.js" type="module" defer></script>

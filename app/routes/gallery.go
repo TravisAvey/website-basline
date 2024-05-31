@@ -13,6 +13,11 @@ import (
 	"github.com/travisavey/baseline/app/services"
 )
 
+type imageCats struct {
+	Category string
+	Selected bool
+}
+
 func gallery(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
 		Text string
@@ -249,6 +254,26 @@ func updateImage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// a func just for all post categories and a flag for an active category
+func checkImageCategories(allCats, cats []database.ImageCategory) []imageCats {
+	var categories []imageCats
+
+	for _, cat := range allCats {
+		curCats := imageCats{
+			Category: cat.Category,
+			Selected: false,
+		}
+		for _, c := range cats {
+			if c.Category == cat.Category {
+				curCats.Selected = true
+			}
+		}
+		categories = append(categories, curCats)
+	}
+
+	return categories
+}
+
 func updateImageView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
@@ -276,11 +301,11 @@ func updateImageView(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		Categories []database.ImageCategory
+		Categories []imageCats
 		Image      database.Photo
 	}{
 		Image:      img.Image,
-		Categories: cats,
+		Categories: checkImageCategories(cats, img.Categories),
 	}
 
 	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-image.html")
