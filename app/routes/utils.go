@@ -105,7 +105,7 @@ func parseImageData(r *http.Request) (database.Image, error) {
 		return database.Image{}, err
 	}
 
-	isGallery, err := strconv.ParseBool(r.FormValue("is-gallery"))
+	isGallery, err := strconv.ParseBool(r.FormValue("forGallery"))
 	if err != nil {
 		return database.Image{}, err
 	}
