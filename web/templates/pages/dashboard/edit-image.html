@@ -7,6 +7,10 @@
     <input name="title" type="text" class="grow" value="{{ .Image.Title }}" />
   </label>
   <label class="input input-bordered flex items-center gap-2 mt-4">
+    ID
+    <input name="title" type="text" class="grow" value="{{ .Image.ID }}" readonly />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
     URL
     <input name="title" type="text" class="grow" value="{{ .Image.ImageURL }}" />
   </label>
@@ -17,9 +21,13 @@
   <label class="input input-bordered flex items-center gap-2 mt-4">
     For Gallery
     <select name="is-gallery" class="select select-md select-primary">
-      <option disabled selected>Pick One</option>
-      <option value="true">Yes</option>
+      {{ if .Image.IsGallery }}
+      <option value="true" selected>Yes</option>
       <option value="false">No</option>
+      {{ else }}
+      <option value="true">Yes</option>
+      <option value="false" selected>No</option>
+      {{ end }}
     </select>
   </label>
   <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">

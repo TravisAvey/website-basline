@@ -11,6 +11,11 @@
         {{ .Image.Title }}
       </h2>
       <p>{{ .Image.Summary }}</p>
+      {{ if .Image.IsGallery }}
+      <p><i class="fa-solid fa-check text-green-500"></i> Gallery</p>
+      {{ else }}
+      <p><i class="fa-solid fa-check text-red-500"></i> Gallery</p>
+      {{ end }}
       <div class="card-actions justify-start">
         <p class="text-gray-300 font-extralight">Categories:</p>
         {{ range .Categories }}
