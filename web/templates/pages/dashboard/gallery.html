@@ -5,7 +5,7 @@
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Images }}
   <div class="card w-96 bg-gray-800 shadow-xl">
-    <figure><img src="{{ .Image.ImageURL }}" alt="" /></figure>
+    <figure><img class="object-contain w-96 max-h-96" src="{{ .Image.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
         {{ .Image.Title }}
