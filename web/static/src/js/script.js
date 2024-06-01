@@ -36,3 +36,17 @@ window.onload = function () {
   })
 }
 
+function copyToClipboard(id) {
+
+  const ele = "imgurl-" + id
+  var text = document.getElementById(ele)
+
+  navigator.clipboard.writeText(text.innerText)
+
+  var classes = text.previousElementSibling.classList
+  // TODO: fade in and out the tooltip 
+  // also will need to 'reset' the classes -- remove after a could 300ms...
+  // this fades in, but not out....
+  //classes.add("tooltip-open", "transition", "transition-opacity", "opacity-0", "duration-300", "ease-in-out")
+}
+

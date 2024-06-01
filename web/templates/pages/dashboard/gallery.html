@@ -10,6 +10,12 @@
       <h2 class="card-title">
         {{ .Image.Title }}
       </h2>
+      <span>Image URL:
+        <span class="tooltip tooltip-success" data-tip="copied"></span>
+        <p class="cursor-pointer" id="imgurl-{{ .Image.ID }}" onclick="copyToClipboard({{ .Image.ID }})">
+          {{ .Image.ImageURL }}
+        </p>
+      </span>
       <p>{{ .Image.Summary }}</p>
       {{ if .Image.IsGallery }}
       <p><i class="fa-solid fa-check text-green-500"></i> Gallery</p>
