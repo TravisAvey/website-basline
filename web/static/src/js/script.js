@@ -36,6 +36,7 @@ window.onload = function () {
   })
 }
 
+
 function copyToClipboard(id) {
 
   const ele = "imgurl-" + id
@@ -47,6 +48,10 @@ function copyToClipboard(id) {
   // TODO: fade in and out the tooltip 
   // also will need to 'reset' the classes -- remove after a could 300ms...
   // this fades in, but not out....
-  //classes.add("tooltip-open", "transition", "transition-opacity", "opacity-0", "duration-300", "ease-in-out")
+  classes.add("tooltip-open", "transition", "transition-opacity", "duration-500", "ease-in-out")
+
+  setTimeout(() => {
+    classes.remove("tooltip-open", "transition", "transition-opacity", "duration-500", "ease-in-out") 
+  }, 1000);
 }
 
