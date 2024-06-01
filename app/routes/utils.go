@@ -117,8 +117,7 @@ func parseImageData(r *http.Request) (database.Image, error) {
 
 	image := database.Image{
 		Image: database.Photo{
-			// TODO: get after we upload to S3...
-			// ImageURL:  r.FormValue("imageURL"),
+			ImageURL:  r.FormValue("imageURL"),
 			Title:     r.FormValue("title"),
 			Summary:   r.FormValue("description"),
 			IsGallery: isGallery,
