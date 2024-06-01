@@ -45,9 +45,6 @@ function copyToClipboard(id) {
   navigator.clipboard.writeText(text.innerText)
 
   var classes = text.previousElementSibling.classList
-  // TODO: fade in and out the tooltip 
-  // also will need to 'reset' the classes -- remove after a could 300ms...
-  // this fades in, but not out....
   classes.add("tooltip-open", "transition", "transition-opacity", "duration-500", "ease-in-out")
 
   setTimeout(() => {
