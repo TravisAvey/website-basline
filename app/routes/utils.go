@@ -105,7 +105,7 @@ func parseImageData(r *http.Request) (database.Image, error) {
 		return database.Image{}, err
 	}
 
-	isGallery, err := strconv.ParseBool(r.FormValue("is-gallery"))
+	isGallery, err := strconv.ParseBool(r.FormValue("forGallery"))
 	if err != nil {
 		return database.Image{}, err
 	}
@@ -117,8 +117,7 @@ func parseImageData(r *http.Request) (database.Image, error) {
 
 	image := database.Image{
 		Image: database.Photo{
-			// TODO: get after we upload to S3...
-			// ImageURL:  r.FormValue("imageURL"),
+			ImageURL:  r.FormValue("imageURL"),
 			Title:     r.FormValue("title"),
 			Summary:   r.FormValue("description"),
 			IsGallery: isGallery,

@@ -5,12 +5,23 @@
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Images }}
   <div class="card w-96 bg-gray-800 shadow-xl">
-    <figure><img src="{{ .Image.ImageURL }}" alt="" /></figure>
+    <figure><img class="object-contain w-96 max-h-96" src="{{ .Image.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
         {{ .Image.Title }}
       </h2>
+      <span>Image URL:
+        <span class="tooltip tooltip-success" data-tip="copied"></span>
+        <p class="cursor-pointer" id="imgurl-{{ .Image.ID }}" onclick="copyToClipboard({{ .Image.ID }})">
+          {{ .Image.ImageURL }}
+        </p>
+      </span>
       <p>{{ .Image.Summary }}</p>
+      {{ if .Image.IsGallery }}
+      <p><i class="fa-solid fa-check text-green-500"></i> Gallery</p>
+      {{ else }}
+      <p><i class="fa-solid fa-check text-red-500"></i> Gallery</p>
+      {{ end }}
       <div class="card-actions justify-start">
         <p class="text-gray-300 font-extralight">Categories:</p>
         {{ range .Categories }}
@@ -22,7 +33,7 @@
           class="btn btn-success">
           View
         </a>
-        <a href="/gallery/{{ .Image.ID }}" class="btn btn-warning">Update</a>
+        <a hx-get="/dashboard/gallery/{{ .Image.ID }}" hx-target="#dashboard" class="btn btn-warning">Update</a>
         <button class="btn btn-error" onclick="showDeleteDialog({{ .Image.ID }})">Delete</button>
         <dialog id="modal_{{ .Image.ID }}" class="modal" role="dialog">
           <div class="modal-box">

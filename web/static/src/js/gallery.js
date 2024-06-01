@@ -60,3 +60,5 @@ for (const cat of cats.children) {
     catOutput.value = categories
   })
 }
+
+  updateCategories()

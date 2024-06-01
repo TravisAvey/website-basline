@@ -13,6 +13,11 @@ import (
 	"github.com/travisavey/baseline/app/services"
 )
 
+type imageCats struct {
+	Category string
+	Selected bool
+}
+
 func gallery(w http.ResponseWriter, _ *http.Request) {
 	data := struct {
 		Text string
@@ -221,31 +226,90 @@ func getImages(w http.ResponseWriter, _ *http.Request) {
 
 // update a image
 func updateImage(w http.ResponseWriter, r *http.Request) {
-	image, err := parseImageData(r)
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte(err.Error()))
+		// TODO: send sse msg
+		fmt.Println("ParseUint error:", err.Error())
 		return
 	}
+	image, err := parseImageData(r)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("ParseImageData error:", err.Error())
+		return
+	}
+	image.Image.ID = id
 
 	err = database.UpdateImage(image)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte(err.Error()))
+		// TODO: send sse msg
+		fmt.Println("UpdateImage error:", err.Error())
+	}
+}
+
+// a func just for all post categories and a flag for an active category
+func checkImageCategories(allCats, cats []database.ImageCategory) []imageCats {
+	var categories []imageCats
+
+	for _, cat := range allCats {
+		curCats := imageCats{
+			Category: cat.Category,
+			Selected: false,
+		}
+		for _, c := range cats {
+			if c.Category == cat.Category {
+				curCats.Selected = true
+			}
+		}
+		categories = append(categories, curCats)
+	}
+
+	return categories
+}
+
+func updateImageView(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("ParseUint error:", err.Error())
+		return
+	}
+
+	var img database.Image
+	img, err = database.GetImage(id)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("GetImage error:", err.Error())
+		return
+	}
+
+	cats, err := database.GetGalleryCategories()
+	if err != nil {
+		msg := getResponseMsg("Failed to get the images", Error)
+		sendSSEMessage(msg)
+		// TODO: log error
+		return
+	}
+
+	data := struct {
+		Categories []imageCats
+		Image      database.Photo
+	}{
+		Image:      img.Image,
+		Categories: checkImageCategories(cats, img.Categories),
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/edit-image.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		// TODO: log error
+		// TODO: send sse msg
+		fmt.Println("ParseFiles error:", err.Error())
 	}
 }
 

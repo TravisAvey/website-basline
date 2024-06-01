@@ -1,0 +1,45 @@
+<h1 class="text-xl">Edit Image</h1>
+<form x-data="{}" hx-put="/dashboard/gallery/{{ .Image.ID }}">
+  <div $nextTick(()=> { updateCategories() })></div>
+  <img class="max-w-xl" src="{{ .Image.ImageURL }}">
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Title
+    <input name="title" type="text" class="grow" value="{{ .Image.Title }}" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    ID
+    <input name="id" type="text" class="grow" value="{{ .Image.ID }}" readonly />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    URL
+    <input name="imageURL" type="text" class="grow" value="{{ .Image.ImageURL }}" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4">
+    Description
+    <input name="description" type="text" class="grow" value="{{ .Image.Summary }}" />
+  </label>
+  <label class="input input-bordered flex items-center gap-2 mt-4 cursor-pointer">
+    <span>For Gallery:</span>
+    {{ if .Image.IsGallery }}
+    <input type="radio" name="forGallery" class="radio checked:bg-green-500" value="true" checked />
+    <input type="radio" name="forGallery" class="radio checked:bg-red-500" value="false" />
+    {{ else }}
+    <input type="radio" name="forGallery" class="radio checked:bg-green-500" value="true" />
+    <input type="radio" name="forGallery" class="radio checked:bg-red-500" value="false" checked />
+    {{ end }}
+  </label>
+  <label id="categories" class="input input-bordered flex items-center gap-2 mt-4">
+    Categories
+    {{ range .Categories }}
+    {{ if .Selected }}
+    <div class="badge badge-success badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ else }}
+    <div class="badge badge-outline badge-lg cursor-pointer mx-2">{{ .Category }}</div>
+    {{ end }}
+    {{ end }}
+    <input type="hidden" id="categories-output" name="categories" value="">
+  </label>
+  <input type="submit" class="btn btn-success text-white font-bold mt-4" value="Update">
+</form>
+
+<script src="/dist/js/gallery.js" type="module" defer></script>
