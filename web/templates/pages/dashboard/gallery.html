@@ -41,7 +41,7 @@
             <p class="py-4">Are you sure? This cannot be undone and this image will be gone forever</p>
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Image.ID }})">Cancel</button>
-              <button hx-delete="/gallery/{{ .Image.ID }}" class="btn btn-error">Delete</button>
+              <button hx-delete="/dashboard/gallery/{{ .Image.ID }}" class="btn btn-error">Delete</button>
             </div>
           </div>
         </dialog>

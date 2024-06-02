@@ -25,7 +25,6 @@ func Setup() {
 	router.HandleFunc("/blog/categories", getPosts).Methods("GET")
 	router.HandleFunc("/gallery", getImages).Methods("GET")
 	router.HandleFunc("/gallery/{id}", getImage).Methods("GET")
-	router.HandleFunc("/gallery/{id}", deleteImage).Methods("DELETE")
 	router.HandleFunc("/contact", contact)
 	router.HandleFunc("/contact/submit", contactForm).Methods("POST")
 	router.HandleFunc("/legal/terms", termsOfUse).Methods("GET")
@@ -33,6 +32,7 @@ func Setup() {
 	router.HandleFunc("/login", loginAttempt).Methods("POST")
 	router.HandleFunc("/logout", logOut).Methods("GET")
 
+	// TODO: create sub domain router for the dashbaord
 	router.HandleFunc("/dashboard", authMiddleware(dashboard))
 	router.HandleFunc("/dashboard/posts", authMiddleware(dashboardPosts)).Methods("GET")
 	router.HandleFunc("/dashboard/posts/new", createPost).Methods("POST")
@@ -47,6 +47,7 @@ func Setup() {
 	router.HandleFunc("/dashboard/gallery/new", authMiddleware(newImage)).Methods("POST")
 	router.HandleFunc("/dashboard/gallery/{id}", authMiddleware(updateImageView)).Methods("GET")
 	router.HandleFunc("/dashboard/gallery/{id}", authMiddleware(updateImage)).Methods("PUT")
+	router.HandleFunc("/dashboard/gallery/{id}", authMiddleware(deleteImage)).Methods("DELETE")
 
 	router.HandleFunc("/dashboard/messages", authMiddleware(getMessages)).Methods("GET")
 	router.HandleFunc("/dashboard/message/{id}", authMiddleware(getMessage)).Methods("GET")
@@ -57,6 +58,7 @@ func Setup() {
 
 	router.HandleFunc("/sse-login", sseLogin)
 
+	// TODO: add handlers for sub domain router dashboard.website.com
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
 

@@ -317,28 +317,16 @@ func updateImageView(w http.ResponseWriter, r *http.Request) {
 func deleteImage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte(err.Error()))
+		// TODO: send sse msg
+		fmt.Println("ParseUint error:", err.Error())
 		return
 	}
 
 	err = database.DeleteImage(id)
 	if err != nil {
-		msg := errMsg{
-			ErrorCode: 500,
-			Message:   "Sorry, something went wrong on our end--unable to delete image",
-			Title:     "_Server Error",
-			ImageURL:  "https://picsum.photos/1920/1080/?blur=2",
-		}
-		sendErrorTemplate(msg, w)
 		// TODO: log error
-		w.Write([]byte(err.Error()))
+		// TODO: send sse msg
+		fmt.Println("DelteImage error:", err.Error())
 	}
 }
