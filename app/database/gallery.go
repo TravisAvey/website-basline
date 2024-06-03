@@ -1,6 +1,11 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/travisavey/baseline/app/services"
+)
 
 func CreateImage(image Image) error {
 	photo := image.Image
@@ -105,7 +110,30 @@ func UpdateImage(image Image) error {
 }
 
 func DeleteImage(id uint64) error {
+	// remove from S3 storage.
+	img, err := GetImage(id)
+	if err != nil {
+		return err
+	}
+	url := strings.Split(img.Image.ImageURL, "/")
+	key := url[len(url)-1]
+	err = services.DeleteImage(key)
+	if err != nil {
+		return err
+	}
+
+	categories, err := GetPhotoCategories(id)
+	if err != nil {
+		return err
+	}
+
+	for _, cat := range categories {
+		err = DeletePhotoCategory(id, cat.ID)
+		if err != nil {
+			return err
+		}
+	}
 	statement := `delete from photos where id=$1;`
-	_, err := db.Exec(statement, id)
+	_, err = db.Exec(statement, id)
 	return err
 }
