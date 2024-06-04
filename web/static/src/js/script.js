@@ -9,11 +9,6 @@ function closeDeleteDialog(id) {
   document.getElementById(ele).close()
 }
 
-function removePostElement(id) {
-  const ele = "post-" + id
-  document.getElementById(ele).remove()
-}
-
 function removeCardElement(id) {
   const ele = "card-" + id
   document.getElementById(ele).remove()
