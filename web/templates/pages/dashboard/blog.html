@@ -7,7 +7,7 @@
 
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Posts }}
-  <div id="post-{{ .Article.ID }}" class="card w-96 bg-gray-800 shadow-xl">
+  <div id="card-{{ .Article.ID }}" class="card w-96 bg-gray-800 shadow-xl">
     <figure><img src="{{ .Article.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
@@ -47,7 +47,7 @@
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Article.ID }})">Cancel</button>
               <button hx-delete="/dashboard/posts/{{ .Article.ID }}" class="btn btn-error"
-                hx-on:click="removePostElement({{ .Article.ID }})">Delete</button>
+                hx-on:click="removeCardElement({{ .Article.ID }})">Delete</button>
             </div>
           </div>
         </dialog>

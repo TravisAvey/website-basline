@@ -202,7 +202,7 @@ func checkPostCategories(allCats, cats []database.Category) []postCats {
 
 // create a post
 func createPost(w http.ResponseWriter, r *http.Request) {
-	post, err := parsePostForm(r)
+	post, err := parsePostForm(r, true)
 	if err != nil {
 		msg := errMsg{
 			ErrorCode: 500,

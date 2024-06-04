@@ -69,8 +69,9 @@ func parseImageCategories(r *http.Request) ([]database.ImageCategory, error) {
 	return categories, nil
 }
 
-func parsePostForm(r *http.Request) (database.Post, error) {
+func parsePostForm(r *http.Request, newPost bool) (database.Post, error) {
 	err := r.ParseForm()
+	var post database.Post
 	if err != nil {
 		return database.Post{}, err
 	}
@@ -79,21 +80,35 @@ func parsePostForm(r *http.Request) (database.Post, error) {
 	if err != nil {
 		return database.Post{}, err
 	}
-	id, err := strconv.ParseInt(r.FormValue("post-id"), 10, 64)
-	if err != nil {
-		return database.Post{}, err
-	}
-	post := database.Post{
-		Article: database.Article{
-			Title:    r.FormValue("title"),
-			ID:       id,
-			ImageURL: r.FormValue("imageURL"),
-			Summary:  r.FormValue("summary"),
-			Content:  r.FormValue("content"),
-			Slug:     r.FormValue("slug"),
-			Keywords: r.FormValue("keywords"),
-		},
-		Categories: categories,
+	if !newPost {
+		id, err := strconv.ParseInt(r.FormValue("post-id"), 10, 64)
+		if err != nil {
+			return database.Post{}, err
+		}
+		post = database.Post{
+			Article: database.Article{
+				Title:    r.FormValue("title"),
+				ID:       id,
+				ImageURL: r.FormValue("imageURL"),
+				Summary:  r.FormValue("summary"),
+				Content:  r.FormValue("content"),
+				Slug:     r.FormValue("slug"),
+				Keywords: r.FormValue("keywords"),
+			},
+			Categories: categories,
+		}
+	} else {
+		post = database.Post{
+			Article: database.Article{
+				Title:    r.FormValue("title"),
+				ImageURL: r.FormValue("imageURL"),
+				Summary:  r.FormValue("summary"),
+				Content:  r.FormValue("content"),
+				Slug:     r.FormValue("slug"),
+				Keywords: r.FormValue("keywords"),
+			},
+			Categories: categories,
+		}
 	}
 
 	return post, nil

@@ -4,7 +4,7 @@
 </button>
 <div class="grid grid-cols-3 gap-4 content-start">
   {{ range .Images }}
-  <div class="card w-96 bg-gray-800 shadow-xl">
+  <div id="card-{{ .Image.ID }}" class="card w-96 bg-gray-800 shadow-xl">
     <figure><img class="object-contain w-96 max-h-96" src="{{ .Image.ImageURL }}" alt="" /></figure>
     <div class="card-body">
       <h2 class="card-title">
@@ -41,7 +41,8 @@
             <p class="py-4">Are you sure? This cannot be undone and this image will be gone forever</p>
             <div class="modal-action">
               <button class="btn btn-info" onclick="closeDeleteDialog({{ .Image.ID }})">Cancel</button>
-              <button hx-delete="/gallery/{{ .Image.ID }}" class="btn btn-error">Delete</button>
+              <button hx-delete="/dashboard/gallery/{{ .Image.ID }}" class="btn btn-error"
+                hx-on:click="removeCardElement({{ .Image.ID }})">Delete</button>
             </div>
           </div>
         </dialog>
