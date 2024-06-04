@@ -116,7 +116,7 @@ func getPosts(w http.ResponseWriter, _ *http.Request) {
 
 // update a post
 func updatePost(w http.ResponseWriter, r *http.Request) {
-	post, err := parsePostForm(r)
+	post, err := parsePostForm(r, false)
 	if err != nil {
 		msg := errMsg{
 			ErrorCode: 500,

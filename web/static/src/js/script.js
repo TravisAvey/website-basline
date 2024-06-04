@@ -14,6 +14,11 @@ function removePostElement(id) {
   document.getElementById(ele).remove()
 }
 
+function removeCardElement(id) {
+  const ele = "card-" + id
+  document.getElementById(ele).remove()
+}
+
 function removeMsgElement(id) {
   const ele = "message-" + id
   document.getElementById(ele).remove()
