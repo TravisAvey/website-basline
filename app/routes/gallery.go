@@ -33,6 +33,34 @@ func gallery(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+func dashboardGallery(w http.ResponseWriter, _ *http.Request) {
+	imgs, err := database.GetAllImages()
+	if err != nil {
+		msg := getResponseMsg("Failed to get the images", Error)
+		sendSSEMessage(msg)
+		// TODO: log error
+		return
+	}
+
+	numImgs := len(imgs)
+
+	data := struct {
+		Images    []database.Image
+		NumImages int
+	}{
+		Images:    imgs,
+		NumImages: numImgs,
+	}
+
+	t, _ := template.ParseFiles("web/templates/pages/dashboard/gallery.html")
+	err = t.Execute(w, data)
+	if err != nil {
+		// TODO: log error
+		msg := getResponseMsg("There was an error creating the page", Error)
+		sendSSEMessage(msg)
+	}
+}
+
 func createImageView(w http.ResponseWriter, _ *http.Request) {
 	cats, err := database.GetGalleryCategories()
 	if err != nil {
