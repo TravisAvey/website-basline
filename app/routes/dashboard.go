@@ -44,18 +44,6 @@ func dashboard(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func dashboardPostCount(w http.ResponseWriter, _ *http.Request) {
-	count, err := database.GetPostCount()
-	if err != nil {
-		msg := getResponseMsg("There was an error retrieving post count", Error)
-		sendSSEMessage(msg)
-		// TODO: log Error
-		return
-	}
-
-	w.Write([]byte(strconv.FormatUint(count, 10)))
-}
-
 func getMessages(w http.ResponseWriter, r *http.Request) {
 	msgs, err := database.GetAllMessages()
 	if err != nil {
